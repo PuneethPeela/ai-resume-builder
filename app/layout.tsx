@@ -10,9 +10,9 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "ResumeAI — AI-Powered Resume Builder",
+  title: "ResumAI — AI-Powered Resume Builder",
   description:
-    "Create professional, ATS-optimized resumes with AI-powered suggestions, real-time preview, and multilingual support. Build your perfect resume in minutes.",
+    "An intelligent resume builder that uses AI to analyze your job experience and craft professional, high-impact resumes tailored to specific job descriptions.",
   keywords: [
     "resume builder",
     "AI resume",
@@ -21,10 +21,13 @@ export const metadata: Metadata = {
     "career",
   ],
   authors: [{ name: "Puneeth Peela" }],
+  icons: {
+    icon: "https://media.base44.com/images/public/6a19953ee856b5d3fd745e2e/ac15ab8bb_logo.png",
+  },
   openGraph: {
-    title: "ResumeAI — AI-Powered Resume Builder",
+    title: "ResumAI — AI-Powered Resume Builder",
     description:
-      "Create professional, ATS-optimized resumes with AI-powered suggestions.",
+      "An intelligent resume builder that uses AI to analyze your job experience and craft professional, high-impact resumes tailored to specific job descriptions.",
     type: "website",
   },
 };

@@ -22,11 +22,11 @@ export function Footer() {
               <Sparkles className="size-3.5 text-white" />
             </div>
             <span className="font-bold text-sm tracking-tight text-zinc-150">
-              ResumeAI Builder
+              ResumAI Builder
             </span>
           </div>
           <p className="text-xs text-zinc-500 leading-relaxed max-w-sm">
-            ResumeAI is a premium, state-of-the-art SaaS workspace engineered to help applicants craft perfect resumes. Synthesize summaries, align metrics, and audit compatibility match instantly.
+            ResumAI is a premium, state-of-the-art SaaS workspace engineered to help applicants craft perfect resumes. Synthesize summaries, align metrics, and audit compatibility match instantly.
           </p>
         </div>
 
@@ -74,7 +74,7 @@ export function Footer() {
       </div>
 
       <div className="max-w-7xl mx-auto mt-12 pt-6 border-t border-zinc-900 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 text-[10px] text-zinc-500">
-        <p>© {currentYear} ResumeAI. All rights reserved.</p>
+        <p>© {currentYear} ResumAI. All rights reserved.</p>
         <p className="font-medium">Crafted in Hyderabad, India • Selection Candidate</p>
       </div>
     </footer>

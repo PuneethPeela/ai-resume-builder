@@ -22,7 +22,7 @@ export default function LandingPage() {
             <Sparkles className="size-3.5 text-white" />
           </div>
           <span className="font-bold text-sm tracking-tight text-zinc-150">
-            ResumeAI
+            ResumAI
           </span>
         </div>
 

@@ -93,7 +93,7 @@ export function ChatAssistant() {
                   <Sparkles className="size-3.5 animate-pulse" />
                 </div>
                 <div>
-                  <h4 className="font-semibold text-zinc-100 text-xs tracking-wide">ResumeAI Copilot</h4>
+                  <h4 className="font-semibold text-zinc-100 text-xs tracking-wide">ResumAI Copilot</h4>
                   <p className="text-[10px] text-zinc-500 flex items-center gap-1">
                     <span className="size-1.5 rounded-full bg-emerald-500 animate-pulse" />
                     Multilingual Assistant

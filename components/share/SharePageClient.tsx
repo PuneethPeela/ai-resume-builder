@@ -48,13 +48,13 @@ export function SharePageClient({ resumeData, template, resumeId }: SharePageCli
         {renderTemplate()}
       </div>
 
-      {/* Floating Hosted on ResumeAI Badge */}
+      {/* Floating Hosted on ResumAI Badge */}
       <div className="fixed bottom-6 right-6 z-50 flex items-center gap-2.5 bg-zinc-950/90 backdrop-blur-md border border-zinc-800/80 rounded-full px-4 py-2 shadow-xl shadow-black/50 select-none scale-100 hover:scale-[1.02] transition-transform duration-200">
         <div className="flex items-center gap-1.5 text-xs text-zinc-300 font-medium">
           <div className="size-5 rounded-md bg-gradient-to-tr from-violet-600 to-indigo-600 flex items-center justify-center text-white shrink-0">
             <Sparkles className="size-3 text-white animate-pulse" />
           </div>
-          <span>Hosted on <span className="font-bold text-zinc-100">ResumeAI</span></span>
+          <span>Hosted on <span className="font-bold text-zinc-100">ResumAI</span></span>
         </div>
         <div className="h-4 w-px bg-zinc-800" />
         <button

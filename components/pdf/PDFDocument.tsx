@@ -227,7 +227,7 @@ export function PDFDocument({ data }: PDFDocumentProps) {
   const order = data.sectionOrder || ["summary", "experience", "education", "skills", "projects", "certifications"];
 
   return (
-    <Document title={`${fullName || "Resume"}_CV.pdf`} author={fullName} subject="Professional Resume" creator="ResumeAI Builder">
+    <Document title={`${fullName || "Resume"}_CV.pdf`} author={fullName} subject="Professional Resume" creator="ResumAI Builder">
       <Page size="A4" style={styles.page}>
         {/* Header Section */}
         <View style={styles.headerContainer}>

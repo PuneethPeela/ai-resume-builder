@@ -37,7 +37,7 @@ export function Header() {
               <Sparkles className="size-4 animate-pulse text-white" />
             </div>
             <span className="font-bold text-base tracking-tight bg-gradient-to-r from-white via-zinc-200 to-zinc-400 bg-clip-text text-transparent">
-              ResumeAI
+              ResumAI
             </span>
           </Link>
         )}
