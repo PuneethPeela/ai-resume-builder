@@ -16,8 +16,10 @@ import {
   LogOut, 
   GraduationCap, 
   Github, 
-  User 
+  User,
+  Settings
 } from "lucide-react";
+import { SettingsModal } from "./SettingsModal";
 import { Button } from "@/components/ui/button";
 import { 
   DropdownMenu, 
@@ -41,6 +43,7 @@ export function Header() {
   const isEditor = pathname.includes("/dashboard/") && pathname !== "/dashboard";
   
   const [profile, setProfile] = useState<UserProfile | null>(null);
+  const [showSettingsModal, setShowSettingsModal] = useState(false);
 
   const fetchProfile = async () => {
     try {
@@ -189,6 +192,14 @@ export function Header() {
               <DropdownMenuSeparator className="bg-zinc-900" />
               
               <DropdownMenuItem 
+                onClick={() => setShowSettingsModal(true)} 
+                className="flex items-center gap-2 hover:bg-zinc-900 text-xs py-2 rounded-lg cursor-pointer px-2.5"
+              >
+                <Settings className="size-3.5 text-zinc-400" />
+                <span>Settings</span>
+              </DropdownMenuItem>
+              
+              <DropdownMenuItem 
                 onClick={handleLogout} 
                 className="flex items-center gap-2 hover:bg-red-500/10 text-red-400 hover:text-red-300 text-xs py-2 rounded-lg cursor-pointer px-2.5"
               >
@@ -199,6 +210,15 @@ export function Header() {
           </DropdownMenu>
         )}
       </div>
+      
+      {profile && (
+        <SettingsModal 
+          isOpen={showSettingsModal} 
+          onClose={() => setShowSettingsModal(false)} 
+          userEmail={profile.email} 
+          userRole={profile.role} 
+        />
+      )}
     </header>
   );
 }
