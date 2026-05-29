@@ -1,22 +1,50 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import type { ChatMessageData, ApiResponse, ChatResponse } from "@/types/api";
-import type { ResumeFormData } from "@/types/resume";
 import { useResumeStore } from "@/stores/resumeStore";
 import { toast } from "sonner";
 
 export function useChatbot() {
-  const { resumeData } = useResumeStore();
-  const [messages, setMessages] = useState<ChatMessageData[]>([
-    {
-      id: "greeting",
-      role: "assistant",
-      content: "Hello! I am your AI Resume Copilot. I can review your details, suggest metrics, add action verbs, and help you customize your resume for target roles. Write in Telugu, Hindi, French, or Japanese and I will respond in kind! What section should we focus on?",
-      timestamp: new Date(),
-    },
-  ]);
+  const { resumeData, resumeId } = useResumeStore();
+  const [messages, setMessages] = useState<ChatMessageData[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+
+  // Load chat history from the database on mount/resumeId change
+  useEffect(() => {
+    const fetchChatHistory = async () => {
+      if (!resumeId) return;
+      try {
+        const response = await fetch(`/api/ai/chat?resumeId=${resumeId}`);
+        const result = await response.json();
+        
+        if (result.success && result.data && result.data.length > 0) {
+          const formatted: ChatMessageData[] = result.data.map((msg: any) => ({
+            id: msg.id,
+            role: msg.role as "user" | "assistant",
+            content: msg.content,
+            language: msg.language || undefined,
+            timestamp: new Date(msg.createdAt),
+          }));
+          setMessages(formatted);
+        } else {
+          // Default greeting fallback if no history exists yet
+          setMessages([
+            {
+              id: "greeting",
+              role: "assistant",
+              content: "Hello! I am your AI Resume Copilot. I can review your details, suggest metrics, add action verbs, and help you customize your resume for target roles. Write in Telugu, Hindi, French, or Japanese and I will respond in kind! What section should we focus on?",
+              timestamp: new Date(),
+            },
+          ]);
+        }
+      } catch (err) {
+        console.error("Failed to load chat history:", err);
+      }
+    };
+
+    fetchChatHistory();
+  }, [resumeId]);
 
   const sendMessage = async (text: string) => {
     if (!text || text.trim() === "") return;
@@ -28,7 +56,7 @@ export function useChatbot() {
       timestamp: new Date(),
     };
 
-    // Update history immediately
+    // Update history immediately for fluid UX
     setMessages((prev) => [...prev, userMessage]);
     setIsLoading(true);
 
@@ -42,6 +70,7 @@ export function useChatbot() {
           message: text,
           resumeContext: resumeData,
           history: messages, // Send last conversations
+          resumeId: resumeId || undefined,
         }),
       });
 
@@ -67,7 +96,7 @@ export function useChatbot() {
     }
   };
 
-  const clearHistory = () => {
+  const clearHistory = async () => {
     setMessages([
       {
         id: "greeting",
@@ -76,6 +105,20 @@ export function useChatbot() {
         timestamp: new Date(),
       },
     ]);
+
+    if (resumeId) {
+      try {
+        const response = await fetch(`/api/ai/chat?resumeId=${resumeId}`, {
+          method: "DELETE",
+        });
+        const result = await response.json();
+        if (result.success) {
+          toast.success("Chat history cleared from database.");
+        }
+      } catch (err) {
+        console.error("Failed to delete chat history on server:", err);
+      }
+    }
   };
 
   return {
