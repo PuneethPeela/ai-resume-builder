@@ -6,8 +6,17 @@ export async function POST(req: NextRequest) {
   try {
     const { email, password, name, role } = await req.json();
 
-    if (!email || !password || !name) {
-      return NextResponse.json({ success: false, error: "Please fill in all fields" }, { status: 400 });
+    if (!name || name.trim().length < 2) {
+      return NextResponse.json({ success: false, error: "Registration Failed: Full Name must be at least 2 characters" }, { status: 400 });
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!email || !emailRegex.test(email.trim())) {
+      return NextResponse.json({ success: false, error: "Registration Failed: Please enter a valid email address format" }, { status: 400 });
+    }
+
+    if (!password || password.length < 6) {
+      return NextResponse.json({ success: false, error: "Registration Failed: Password must be at least 6 characters" }, { status: 400 });
     }
 
     const normalizedEmail = email.toLowerCase().trim();

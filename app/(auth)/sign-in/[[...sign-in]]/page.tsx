@@ -54,30 +54,26 @@ export default function SignInPage() {
     setLoading(true);
     const targetEmail = "puneeth.google@gmail.com";
     const targetName = "Puneeth Peela";
-    const targetPass = "google123";
 
     try {
-      // Force registration as standard "user" role
-      await fetch("/api/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: targetEmail, password: targetPass, name: targetName, role: "user" }),
-      });
-
-      // Login
+      // Direct call to new robust login/upsert flow
       const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: targetEmail, password: targetPass }),
+        body: JSON.stringify({ 
+          email: targetEmail, 
+          name: targetName, 
+          isGoogle: true 
+        }),
       });
-      const result = await res.json();
 
+      const result = await res.json();
       if (result.success) {
         toast.success("Successfully authenticated with Google account!");
         router.push("/dashboard");
         router.refresh();
       } else {
-        toast.error(result.error || "Google Auth mapping failed");
+        toast.error(result.error || "Google Auth registration failed");
       }
     } catch (err) {
       toast.error("Google authentication service error");

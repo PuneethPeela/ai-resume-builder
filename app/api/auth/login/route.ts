@@ -4,7 +4,51 @@ import { cookies } from "next/headers";
 
 export async function POST(req: NextRequest) {
   try {
-    const { email, password } = await req.json();
+    const { email, password, isGoogle, name } = await req.json();
+
+    if (isGoogle) {
+      if (!email) {
+        return NextResponse.json({ success: false, error: "Email is required for Google Sign-In" }, { status: 400 });
+      }
+      const normalizedEmail = email.toLowerCase().trim();
+
+      // Find or auto-register the Google user
+      let user = await prisma.user.findFirst({
+        where: { email: normalizedEmail },
+      });
+
+      if (!user) {
+        const mockClerkId = `mock_${normalizedEmail.split("@")[0]}_${Math.floor(Math.random() * 1000)}`;
+        user = await prisma.user.create({
+          data: {
+            clerkId: mockClerkId,
+            email: normalizedEmail,
+            name: name || normalizedEmail.split("@")[0],
+            password: password || "google123",
+            role: "user",
+          }
+        });
+      }
+
+      // Write mock cookie
+      const cookieStore = await cookies();
+      cookieStore.set("mock-user-id", user.clerkId, {
+        path: "/",
+        httpOnly: false,
+        maxAge: 60 * 60 * 24 * 7,
+      });
+
+      return NextResponse.json({
+        success: true,
+        data: {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          role: user.role,
+          clerkId: user.clerkId,
+        },
+      });
+    }
 
     if (!email || !password) {
       return NextResponse.json({ success: false, error: "Please enter email and password" }, { status: 400 });
