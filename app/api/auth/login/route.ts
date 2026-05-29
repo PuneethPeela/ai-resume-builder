@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
     });
 
     if (!user) {
-      return NextResponse.json({ success: false, error: "User not found. Register a new account!" }, { status: 404 });
+      return NextResponse.json({ success: false, error: "User is not registered" }, { status: 404 });
     }
 
     // Mock validation matching (allows easy reviewer login or password match)
