@@ -21,7 +21,7 @@ export default function DashboardPage() {
             <span>Welcome back{isLoaded && firstName ? `, ${firstName}` : ""}</span>
             <Sparkles className="size-5 text-violet-400 animate-pulse" />
           </h2>
-          <p className="text-xs sm:text-sm text-zinc-550">
+          <p className="text-xs sm:text-sm text-zinc-500">
             Build, optimize, and tailor your professional resumes. Run AI audits to verify ATS compatibility.
           </p>
         </div>
@@ -30,7 +30,7 @@ export default function DashboardPage() {
         <div className="flex gap-4 shrink-0 text-zinc-500 text-xs font-semibold relative z-10 border-l border-zinc-900 pl-4 sm:h-10 items-center">
           <div className="flex items-center gap-1.5">
             <CheckCircle2 className="size-4 text-violet-400/80" />
-            <span>Next.js 14 API</span>
+            <span>Next.js 16 API</span>
           </div>
           <div className="flex items-center gap-1.5">
             <Terminal className="size-4 text-violet-400/80" />

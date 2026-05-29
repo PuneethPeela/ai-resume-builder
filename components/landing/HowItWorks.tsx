@@ -59,7 +59,7 @@ export function HowItWorks() {
             >
               {/* Icon Container with Step Badge */}
               <div className="relative">
-                <div className="size-16 rounded-2xl bg-zinc-900 border border-zinc-850 group-hover:border-violet-500/30 flex items-center justify-center shadow-lg group-hover:scale-105 transition-all duration-300">
+                <div className="size-16 rounded-2xl bg-zinc-900 border border-zinc-800 group-hover:border-violet-500/30 flex items-center justify-center shadow-lg group-hover:scale-105 transition-all duration-300">
                   {s.icon}
                 </div>
                 {/* Number Circle Badge */}
@@ -73,7 +73,7 @@ export function HowItWorks() {
                 <h4 className="font-bold text-zinc-200 text-sm group-hover:text-violet-400 transition-colors">
                   {s.title}
                 </h4>
-                <p className="text-xs text-zinc-450 leading-relaxed">
+                <p className="text-xs text-zinc-400 leading-relaxed">
                   {s.desc}
                 </p>
               </div>

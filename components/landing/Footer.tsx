@@ -7,7 +7,7 @@ import Link from "next/link";
 export function Footer() {
   const currentYear = new Date().getFullYear();
   const techStack = [
-    "Next.js 14 (App Router)", "React 18", "TypeScript", "Google Gemini AI",
+    "Next.js 16 (App Router)", "React 18", "TypeScript", "Google Gemini AI",
     "Tailwind CSS 4", "Prisma ORM", "Clerk OAuth", "Zustand State"
   ];
 
@@ -18,7 +18,7 @@ export function Footer() {
         {/* Brand description block */}
         <div className="space-y-4 lg:col-span-2">
           <div className="flex items-center gap-1.5 select-none">
-            <div className="size-6.5 rounded-lg bg-gradient-to-tr from-violet-600 to-indigo-650 flex items-center justify-center text-white shadow-md">
+            <div className="size-6.5 rounded-lg bg-gradient-to-tr from-violet-600 to-indigo-600 flex items-center justify-center text-white shadow-md">
               <Sparkles className="size-3.5 text-white" />
             </div>
             <span className="font-bold text-sm tracking-tight text-zinc-150">
@@ -73,7 +73,7 @@ export function Footer() {
 
       </div>
 
-      <div className="max-w-7xl mx-auto mt-12 pt-6 border-t border-zinc-900 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 text-[10px] text-zinc-650">
+      <div className="max-w-7xl mx-auto mt-12 pt-6 border-t border-zinc-900 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 text-[10px] text-zinc-500">
         <p>© {currentYear} ResumeAI. All rights reserved.</p>
         <p className="font-medium">Crafted in Hyderabad, India • Selection Candidate</p>
       </div>

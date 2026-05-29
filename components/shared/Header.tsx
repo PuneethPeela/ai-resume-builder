@@ -23,7 +23,7 @@ export function Header() {
             <Button
               variant="outline"
               size="xs"
-              className="text-xs text-zinc-400 hover:text-zinc-250 border-zinc-900 bg-zinc-950 gap-1"
+              className="text-xs text-zinc-400 hover:text-zinc-200 border-zinc-900 bg-zinc-950 gap-1"
             >
               <ArrowLeft className="size-3.5" />
               <span>Dashboard</span>
@@ -31,7 +31,7 @@ export function Header() {
           </Link>
         ) : (
           <Link href="/" className="flex items-center gap-1.5 group select-none">
-            <div className="size-7 rounded-lg bg-gradient-to-tr from-violet-600 to-indigo-650 flex items-center justify-center text-white shadow-md shadow-violet-900/20 group-hover:scale-105 transition-transform duration-200">
+            <div className="size-7 rounded-lg bg-gradient-to-tr from-violet-600 to-indigo-600 flex items-center justify-center text-white shadow-md shadow-violet-900/20 group-hover:scale-105 transition-transform duration-200">
               <Sparkles className="size-4 animate-pulse text-white" />
             </div>
             <span className="font-bold text-base tracking-tight bg-gradient-to-r from-white via-zinc-200 to-zinc-400 bg-clip-text text-transparent">

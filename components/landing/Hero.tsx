@@ -11,7 +11,7 @@ export function Hero() {
     <section className="relative min-h-[calc(100vh-3.5rem)] flex items-center justify-center overflow-hidden px-4 sm:px-6 lg:px-8 py-16 md:py-24 bg-zinc-950 font-sans">
       {/* Background Neon Glow circles */}
       <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] rounded-full bg-violet-600/10 blur-[100px] pointer-events-none" />
-      <div className="absolute bottom-1/4 right-1/4 translate-x-1/2 translate-y-1/2 w-[400px] h-[400px] rounded-full bg-indigo-650/10 blur-[100px] pointer-events-none" />
+      <div className="absolute bottom-1/4 right-1/4 translate-x-1/2 translate-y-1/2 w-[400px] h-[400px] rounded-full bg-indigo-600/10 blur-[100px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative z-10">
         
@@ -105,7 +105,7 @@ export function Hero() {
           className="lg:col-span-5 flex justify-center items-center relative"
         >
           {/* Neon Ring behind Mockup */}
-          <div className="absolute inset-0 rounded-3xl bg-gradient-to-tr from-violet-600/10 to-indigo-650/10 blur-xl -z-10 animate-pulse [animation-duration:5s]" />
+          <div className="absolute inset-0 rounded-3xl bg-gradient-to-tr from-violet-600/10 to-indigo-600/10 blur-xl -z-10 animate-pulse [animation-duration:5s]" />
           
           <div className="w-[320px] h-[420px] rounded-2xl border border-zinc-800 bg-zinc-950/80 backdrop-blur-xl p-5 shadow-2xl relative overflow-hidden flex flex-col justify-between group">
             {/* Header info */}
@@ -127,13 +127,13 @@ export function Hero() {
             {/* Simulating resume text lines */}
             <div className="flex-1 py-4 space-y-4">
               <div className="space-y-1.5">
-                <div className="w-12 h-2 bg-zinc-850 rounded-full" />
+                <div className="w-12 h-2 bg-zinc-800 rounded-full" />
                 <div className="w-full h-1.5 bg-zinc-900 rounded-full" />
                 <div className="w-5/6 h-1.5 bg-zinc-900 rounded-full" />
               </div>
 
               <div className="space-y-1.5">
-                <div className="w-16 h-2 bg-zinc-850 rounded-full" />
+                <div className="w-16 h-2 bg-zinc-800 rounded-full" />
                 <div className="w-full h-1.5 bg-zinc-900 rounded-full" />
                 <div className="w-full h-1.5 bg-zinc-900 rounded-full" />
                 <div className="w-4/5 h-1.5 bg-zinc-900 rounded-full" />
@@ -146,7 +146,7 @@ export function Hero() {
                 <ShieldCheck className="size-3.5" />
                 <span>Google XYZ Optimized</span>
               </div>
-              <span className="text-zinc-650">v1.0.4</span>
+              <span className="text-zinc-500">v1.0.4</span>
             </div>
           </div>
         </motion.div>

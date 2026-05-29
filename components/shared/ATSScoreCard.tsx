@@ -98,7 +98,7 @@ export function ATSScoreCard() {
           /* Step 1: Input Job Description */
           <div className="space-y-4 py-3">
             <div className="space-y-2">
-              <label htmlFor="jd" className="text-xs font-semibold text-zinc-350">
+              <label htmlFor="jd" className="text-xs font-semibold text-zinc-300">
                 Target Job Description
               </label>
               <Textarea
@@ -183,7 +183,7 @@ export function ATSScoreCard() {
                 </p>
                 <div className="flex flex-wrap gap-1">
                   {result.presentKeywords.length === 0 ? (
-                    <span className="text-zinc-550 text-xs font-medium">None detected</span>
+                    <span className="text-zinc-500 text-xs font-medium">None detected</span>
                   ) : (
                     result.presentKeywords.map((kw) => (
                       <Badge
@@ -205,7 +205,7 @@ export function ATSScoreCard() {
                 </p>
                 <div className="flex flex-wrap gap-1">
                   {result.missingKeywords.length === 0 ? (
-                    <span className="text-zinc-550 text-xs font-medium">Flawless alignment!</span>
+                    <span className="text-zinc-500 text-xs font-medium">Flawless alignment!</span>
                   ) : (
                     result.missingKeywords.map((kw) => (
                       <Badge
@@ -224,7 +224,7 @@ export function ATSScoreCard() {
             {/* Suggestions list */}
             <div className="space-y-2 pt-2 border-t border-zinc-900">
               <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider">Strategic Recommendations</p>
-              <ul className="list-disc pl-4 text-xs text-zinc-350 space-y-1.5 leading-relaxed">
+              <ul className="list-disc pl-4 text-xs text-zinc-300 space-y-1.5 leading-relaxed">
                 {result.suggestions.map((s, i) => (
                   <li key={i}>{s}</li>
                 ))}

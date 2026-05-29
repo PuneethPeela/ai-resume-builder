@@ -131,7 +131,7 @@ export function ResumeCard({ resume, onRefresh }: ResumeCardProps) {
           {/* Action Menu dropdown */}
           <div onClick={(e) => e.stopPropagation()} className="shrink-0">
             <DropdownMenu>
-              <DropdownMenuTrigger className="text-zinc-550 hover:text-zinc-355 hover:bg-zinc-800/40 rounded-lg size-8 flex items-center justify-center cursor-pointer transition-all border border-transparent outline-none">
+              <DropdownMenuTrigger className="text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800/40 rounded-lg size-8 flex items-center justify-center cursor-pointer transition-all border border-transparent outline-none">
                 <MoreVertical className="size-4" />
               </DropdownMenuTrigger>
               <DropdownMenuContent className="bg-zinc-950 border-zinc-900 text-zinc-300 min-w-[140px] rounded-xl shadow-xl">
@@ -158,7 +158,7 @@ export function ResumeCard({ resume, onRefresh }: ResumeCardProps) {
           </h4>
           <div className="flex items-center gap-2 mt-1">
             <span className="text-[10px] text-zinc-500 font-semibold tracking-wider uppercase font-mono flex items-center gap-1">
-              <Layout className="size-2.5 text-zinc-650" />
+              <Layout className="size-2.5 text-zinc-500" />
               {resume.template}
             </span>
             {resume.atsScore ? (
@@ -172,7 +172,7 @@ export function ResumeCard({ resume, onRefresh }: ResumeCardProps) {
       </div>
 
       {/* Bottom Metadata */}
-      <div className="flex items-center gap-1.5 text-[10px] text-zinc-550 pt-3 border-t border-zinc-900/60 mt-2 font-medium">
+      <div className="flex items-center gap-1.5 text-[10px] text-zinc-500 pt-3 border-t border-zinc-900/60 mt-2 font-medium">
         <Calendar className="size-3 text-zinc-600" />
         <span>Updated {formatDate(resume.updatedAt)}</span>
       </div>

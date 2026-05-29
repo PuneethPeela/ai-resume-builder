@@ -124,7 +124,7 @@ export function ProjectsSection() {
                       placeholder="https://ai-resumes.vercel.app"
                       value={proj.liveUrl || ""}
                       onChange={(e) => updateProject(proj.id, { liveUrl: e.target.value })}
-                      className="bg-zinc-900/50 border-zinc-800 text-zinc-100 placeholder:text-zinc-650 focus-visible:ring-violet-500"
+                      className="bg-zinc-900/50 border-zinc-800 text-zinc-100 placeholder:text-zinc-500 focus-visible:ring-violet-500"
                     />
                   </div>
 
@@ -136,7 +136,7 @@ export function ProjectsSection() {
                       placeholder="https://github.com/username/ai-resumes"
                       value={proj.githubUrl || ""}
                       onChange={(e) => updateProject(proj.id, { githubUrl: e.target.value })}
-                      className="bg-zinc-900/50 border-zinc-800 text-zinc-100 placeholder:text-zinc-650 focus-visible:ring-violet-500"
+                      className="bg-zinc-900/50 border-zinc-800 text-zinc-100 placeholder:text-zinc-500 focus-visible:ring-violet-500"
                     />
                   </div>
 

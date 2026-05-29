@@ -47,7 +47,7 @@ export function CreateResumeButton() {
       onClick={handleCreate}
       className="group relative h-48 rounded-2xl border-2 border-dashed border-zinc-800 hover:border-violet-500/50 bg-zinc-950/20 hover:bg-violet-500/5 flex flex-col items-center justify-center gap-3 p-6 transition-all duration-300 shadow-inner cursor-pointer"
     >
-      <div className="size-12 rounded-xl bg-zinc-900 border border-zinc-850 group-hover:border-violet-500/30 flex items-center justify-center text-zinc-400 group-hover:text-violet-400 group-hover:scale-105 transition-all duration-300">
+      <div className="size-12 rounded-xl bg-zinc-900 border border-zinc-800 group-hover:border-violet-500/30 flex items-center justify-center text-zinc-400 group-hover:text-violet-400 group-hover:scale-105 transition-all duration-300">
         {creating ? (
           <Loader2 className="size-5 animate-spin text-violet-400" />
         ) : (

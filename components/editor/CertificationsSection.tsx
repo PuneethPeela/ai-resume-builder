@@ -108,7 +108,7 @@ export function CertificationsSection() {
                       placeholder="Jan 2024"
                       value={cert.date || ""}
                       onChange={(e) => updateCertification(cert.id, { date: e.target.value })}
-                      className="bg-zinc-900/50 border-zinc-800 text-zinc-100 placeholder:text-zinc-650 focus-visible:ring-violet-500"
+                      className="bg-zinc-900/50 border-zinc-800 text-zinc-100 placeholder:text-zinc-500 focus-visible:ring-violet-500"
                     />
                   </div>
 
@@ -120,7 +120,7 @@ export function CertificationsSection() {
                       placeholder="https://credentials.example.com/aws-architect"
                       value={cert.url || ""}
                       onChange={(e) => updateCertification(cert.id, { url: e.target.value })}
-                      className="bg-zinc-900/50 border-zinc-800 text-zinc-100 placeholder:text-zinc-650 focus-visible:ring-violet-500"
+                      className="bg-zinc-900/50 border-zinc-800 text-zinc-100 placeholder:text-zinc-500 focus-visible:ring-violet-500"
                     />
                   </div>
                 </div>

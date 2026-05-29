@@ -46,7 +46,7 @@ export function ModernTemplate({ data }: TemplateProps) {
                 </span>
               </div>
               {exp.bullets && exp.bullets.length > 0 && (
-                <ul className="list-disc pl-3 text-[9px] text-zinc-650 space-y-0.5 leading-relaxed font-sans">
+                <ul className="list-disc pl-3 text-[9px] text-zinc-600 space-y-0.5 leading-relaxed font-sans">
                   {exp.bullets.filter(b => b.trim() !== "").map((bullet, i) => (
                     <li key={i}>{bullet}</li>
                   ))}
@@ -75,7 +75,7 @@ export function ModernTemplate({ data }: TemplateProps) {
                   {proj.liveUrl && <span className="flex items-center gap-0.5"><Globe className="size-2" />{formatUrl(proj.liveUrl)}</span>}
                 </div>
               </div>
-              <p className="text-[9px] text-zinc-650 leading-relaxed font-sans">
+              <p className="text-[9px] text-zinc-600 leading-relaxed font-sans">
                 {proj.description}
               </p>
               {proj.technologies && proj.technologies.length > 0 && (
@@ -137,7 +137,7 @@ export function ModernTemplate({ data }: TemplateProps) {
         <div className="space-y-2 text-[9px]">
           {certifications.map((cert) => (
             <div key={cert.id} className="space-y-0.5">
-              <p className="font-bold text-zinc-250 font-sans">{cert.name}</p>
+              <p className="font-bold text-zinc-300 font-sans">{cert.name}</p>
               <p className="text-zinc-400 font-sans text-[8px]">{cert.issuer} • {cert.date}</p>
             </div>
           ))}

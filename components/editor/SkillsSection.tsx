@@ -65,7 +65,7 @@ export function SkillsSection() {
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           onKeyDown={handleKeyDown}
-          className="bg-zinc-900/50 border-zinc-800 text-zinc-100 placeholder:text-zinc-650 focus-visible:ring-violet-500"
+          className="bg-zinc-900/50 border-zinc-800 text-zinc-100 placeholder:text-zinc-500 focus-visible:ring-violet-500"
         />
 
         {skills.length > 0 && (
@@ -107,7 +107,7 @@ export function SkillsSection() {
                 className={`text-[10px] px-2 py-0.5 rounded-full border transition-all cursor-pointer font-medium ${
                   isAdded
                     ? "bg-zinc-900/20 border-zinc-900/50 text-zinc-600 cursor-not-allowed"
-                    : "bg-zinc-900/50 border-zinc-800 text-zinc-400 hover:text-zinc-200 hover:border-zinc-700 hover:bg-zinc-850"
+                    : "bg-zinc-900/50 border-zinc-800 text-zinc-400 hover:text-zinc-200 hover:border-zinc-700 hover:bg-zinc-800"
                 }`}
               >
                 + {skill}

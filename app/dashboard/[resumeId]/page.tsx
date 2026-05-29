@@ -20,6 +20,23 @@ export default function ResumeEditorPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // Guard against browser window closures/reloads when store is dirty
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      const state = useResumeStore.getState();
+      if (state.isDirty) {
+        e.preventDefault();
+        e.returnValue = "You have unsaved changes. Are you sure you want to leave?";
+        return e.returnValue;
+      }
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, []);
+
   useEffect(() => {
     if (!resumeId) return;
 
@@ -48,8 +65,22 @@ export default function ResumeEditorPage() {
 
     fetchResume();
 
-    // Reset store on unmount to prevent leaks
+    // Reset store on unmount and flush dirty edits immediately
     return () => {
+      const state = useResumeStore.getState();
+      if (state.isDirty && state.resumeId) {
+        // Dispatch fire-and-forget save to network
+        fetch(`/api/resumes/${state.resumeId}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            data: state.resumeData,
+            template: state.template,
+          }),
+        }).catch((err) => console.error("Unmount save error:", err));
+      }
       resetResume();
     };
   }, [resumeId, loadResume, resetResume]);

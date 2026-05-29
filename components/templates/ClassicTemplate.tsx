@@ -38,7 +38,7 @@ export function ClassicTemplate({ data }: TemplateProps) {
           {experience.map((exp) => (
             <div key={exp.id} className="space-y-1">
               <div className="flex justify-between items-baseline text-[10.5px]">
-                <span className="font-bold text-zinc-850 font-serif">
+                <span className="font-bold text-zinc-800 font-serif">
                   {exp.position} — <span className="font-medium text-zinc-700">{exp.company}</span>
                 </span>
                 <span className="text-[9.5px] text-zinc-600 font-serif whitespace-nowrap">
@@ -68,12 +68,12 @@ export function ClassicTemplate({ data }: TemplateProps) {
           {education.map((edu) => (
             <div key={edu.id} className="flex justify-between items-baseline text-[10.5px]">
               <div>
-                <span className="font-bold text-zinc-850 font-serif">{edu.institution}</span>
+                <span className="font-bold text-zinc-800 font-serif">{edu.institution}</span>
                 <span className="text-zinc-700 font-serif">
                   {" "}— {edu.degree} in {edu.field}
                 </span>
               </div>
-              <span className="text-[9.5px] text-zinc-650 font-serif whitespace-nowrap">
+              <span className="text-[9.5px] text-zinc-600 font-serif whitespace-nowrap">
                 {edu.startDate} – {edu.endDate}
                 {edu.gpa ? ` | GPA: ${edu.gpa}` : ""}
               </span>
@@ -104,7 +104,7 @@ export function ClassicTemplate({ data }: TemplateProps) {
           {projects.map((proj) => (
             <div key={proj.id} className="space-y-0.5">
               <div className="flex justify-between items-baseline text-[10.5px]">
-                <div className="font-bold text-zinc-850 font-serif flex items-center gap-1.5">
+                <div className="font-bold text-zinc-800 font-serif flex items-center gap-1.5">
                   {proj.name}
                   {proj.technologies && proj.technologies.length > 0 && (
                     <span className="text-[8.5px] font-normal font-sans px-1.5 py-0.2 rounded bg-zinc-100 text-zinc-600 border border-zinc-200">
@@ -137,7 +137,7 @@ export function ClassicTemplate({ data }: TemplateProps) {
               <span>
                 <span className="font-bold text-zinc-800">{cert.name}</span> — {cert.issuer}
               </span>
-              <span className="text-[9px] text-zinc-550 whitespace-nowrap ml-2">{cert.date}</span>
+              <span className="text-[9px] text-zinc-500 whitespace-nowrap ml-2">{cert.date}</span>
             </div>
           ))}
         </div>

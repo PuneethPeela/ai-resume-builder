@@ -83,14 +83,14 @@ export function Features() {
               variants={cardVariants}
               className="group p-6 rounded-2xl border border-zinc-900 bg-zinc-950/20 hover:border-violet-500/30 hover:bg-violet-500/[0.02] flex flex-col gap-4 transition-all duration-300 shadow-md backdrop-blur-md"
             >
-              <div className="size-12 rounded-xl bg-zinc-900 border border-zinc-850 group-hover:border-violet-500/20 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform duration-300">
+              <div className="size-12 rounded-xl bg-zinc-900 border border-zinc-800 group-hover:border-violet-500/20 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform duration-300">
                 {f.icon}
               </div>
               <div className="space-y-2">
                 <h4 className="font-bold text-zinc-200 text-sm group-hover:text-violet-400 transition-colors">
                   {f.title}
                 </h4>
-                <p className="text-xs text-zinc-450 leading-relaxed">
+                <p className="text-xs text-zinc-400 leading-relaxed">
                   {f.desc}
                 </p>
               </div>

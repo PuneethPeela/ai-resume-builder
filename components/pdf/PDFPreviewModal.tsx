@@ -71,7 +71,7 @@ export function PDFPreviewModal() {
             </div>
           </div>
 
-          <div className="flex gap-2 items-start text-xs text-zinc-400 p-3 rounded-lg bg-violet-650/5 border border-violet-500/10">
+          <div className="flex gap-2 items-start text-xs text-zinc-400 p-3 rounded-lg bg-violet-600/5 border border-violet-500/10">
             <Sparkles className="size-4 text-violet-400 shrink-0 mt-0.5 animate-pulse" />
             <p>
               Your PDF is compiled directly in the browser as a standard high-quality vector document, ensuring clean typography and perfect margins for physical print.

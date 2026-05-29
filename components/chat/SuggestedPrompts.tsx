@@ -41,7 +41,7 @@ export function SuggestedPrompts({ onSelectPrompt }: SuggestedPromptsProps) {
             key={idx}
             type="button"
             onClick={() => onSelectPrompt(p.text)}
-            className="w-full text-left p-2.5 rounded-xl border border-zinc-900 bg-zinc-900/30 hover:border-zinc-800 hover:bg-zinc-850/50 transition-all text-xs text-zinc-300 group flex items-start justify-between gap-3 cursor-pointer"
+            className="w-full text-left p-2.5 rounded-xl border border-zinc-900 bg-zinc-900/30 hover:border-zinc-800 hover:bg-zinc-800/50 transition-all text-xs text-zinc-300 group flex items-start justify-between gap-3 cursor-pointer"
           >
             <span className="font-medium group-hover:text-zinc-200 line-clamp-2 leading-relaxed">
               "{p.text}"

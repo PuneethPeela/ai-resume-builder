@@ -17,18 +17,18 @@ export function MinimalTemplate({ data }: TemplateProps) {
 
   const sections: Record<string, React.ReactNode> = {
     summary: summary ? (
-      <div key="summary" className="grid grid-cols-1 md:grid-cols-4 gap-2 pt-2 border-t border-zinc-150">
+      <div key="summary" className="grid grid-cols-1 md:grid-cols-4 gap-2 pt-2 border-t border-zinc-200">
         <span className="text-[10px] font-bold text-zinc-900 uppercase tracking-wide">
           About
         </span>
-        <div className="md:col-span-3 text-[10px] text-zinc-650 leading-relaxed text-justify">
+        <div className="md:col-span-3 text-[10px] text-zinc-600 leading-relaxed text-justify">
           {summary}
         </div>
       </div>
     ) : null,
 
     experience: experience.length > 0 ? (
-      <div key="experience" className="grid grid-cols-1 md:grid-cols-4 gap-2 pt-2 border-t border-zinc-150">
+      <div key="experience" className="grid grid-cols-1 md:grid-cols-4 gap-2 pt-2 border-t border-zinc-200">
         <span className="text-[10px] font-bold text-zinc-900 uppercase tracking-wide">
           Experience
         </span>
@@ -37,7 +37,7 @@ export function MinimalTemplate({ data }: TemplateProps) {
             <div key={exp.id} className="space-y-1">
               <div className="flex justify-between items-baseline">
                 <span className="font-bold text-[10px] text-zinc-900">
-                  {exp.position} <span className="font-normal text-zinc-550">| {exp.company}</span>
+                  {exp.position} <span className="font-normal text-zinc-500">| {exp.company}</span>
                 </span>
                 <span className="text-[9px] text-zinc-500 whitespace-nowrap">
                   {exp.startDate} – {exp.current ? "Present" : exp.endDate}
@@ -58,7 +58,7 @@ export function MinimalTemplate({ data }: TemplateProps) {
     ) : null,
 
     education: education.length > 0 ? (
-      <div key="education" className="grid grid-cols-1 md:grid-cols-4 gap-2 pt-2 border-t border-zinc-150">
+      <div key="education" className="grid grid-cols-1 md:grid-cols-4 gap-2 pt-2 border-t border-zinc-200">
         <span className="text-[10px] font-bold text-zinc-900 uppercase tracking-wide">
           Education
         </span>
@@ -81,18 +81,18 @@ export function MinimalTemplate({ data }: TemplateProps) {
     ) : null,
 
     skills: skills.length > 0 ? (
-      <div key="skills" className="grid grid-cols-1 md:grid-cols-4 gap-2 pt-2 border-t border-zinc-150">
+      <div key="skills" className="grid grid-cols-1 md:grid-cols-4 gap-2 pt-2 border-t border-zinc-200">
         <span className="text-[10px] font-bold text-zinc-900 uppercase tracking-wide">
           Skills
         </span>
-        <div className="md:col-span-3 text-[10px] text-zinc-650 leading-relaxed">
+        <div className="md:col-span-3 text-[10px] text-zinc-600 leading-relaxed">
           {skills.join("  •  ")}
         </div>
       </div>
     ) : null,
 
     projects: projects.length > 0 ? (
-      <div key="projects" className="grid grid-cols-1 md:grid-cols-4 gap-2 pt-2 border-t border-zinc-150">
+      <div key="projects" className="grid grid-cols-1 md:grid-cols-4 gap-2 pt-2 border-t border-zinc-200">
         <span className="text-[10px] font-bold text-zinc-900 uppercase tracking-wide">
           Projects
         </span>
@@ -123,13 +123,13 @@ export function MinimalTemplate({ data }: TemplateProps) {
     ) : null,
 
     certifications: certifications.length > 0 ? (
-      <div key="certifications" className="grid grid-cols-1 md:grid-cols-4 gap-2 pt-2 border-t border-zinc-150">
+      <div key="certifications" className="grid grid-cols-1 md:grid-cols-4 gap-2 pt-2 border-t border-zinc-200">
         <span className="text-[10px] font-bold text-zinc-900 uppercase tracking-wide">
           Credentials
         </span>
         <div className="md:col-span-3 space-y-1.5">
           {certifications.map((cert) => (
-            <div key={cert.id} className="flex justify-between items-baseline text-[9.5px] text-zinc-650">
+            <div key={cert.id} className="flex justify-between items-baseline text-[9.5px] text-zinc-600">
               <span>
                 <span className="font-bold text-zinc-805">{cert.name}</span> — {cert.issuer}
               </span>

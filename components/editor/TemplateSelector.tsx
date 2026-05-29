@@ -50,7 +50,7 @@ export function TemplateSelector() {
                 "group relative text-left p-3.5 rounded-xl border transition-all duration-300 flex flex-col justify-between h-auto cursor-pointer",
                 isSelected
                   ? "bg-violet-600/10 border-violet-500/80 shadow-md shadow-violet-900/10 text-zinc-100"
-                  : "bg-zinc-900/40 border-zinc-800 hover:border-zinc-700 hover:bg-zinc-850 text-zinc-400 hover:text-zinc-200"
+                  : "bg-zinc-900/40 border-zinc-800 hover:border-zinc-700 hover:bg-zinc-800 text-zinc-400 hover:text-zinc-200"
               )}
             >
               <div className="space-y-2">
@@ -109,8 +109,8 @@ export function TemplateSelector() {
                   <div className="flex flex-col flex-1 p-1.5 space-y-1">
                     <div className="w-8 h-1 bg-zinc-700 rounded-full" />
                     <div className="w-full h-0.5 bg-zinc-800 rounded-full" />
-                    <div className="w-5/6 h-0.5 bg-zinc-850 rounded-full" />
-                    <div className="w-4/5 h-0.5 bg-zinc-850 rounded-full" />
+                    <div className="w-5/6 h-0.5 bg-zinc-800 rounded-full" />
+                    <div className="w-4/5 h-0.5 bg-zinc-800 rounded-full" />
                   </div>
                 )}
               </div>

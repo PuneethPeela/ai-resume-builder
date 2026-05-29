@@ -1,24 +1,53 @@
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@clerk/nextjs/server";
+import { auth, currentUser } from "@clerk/nextjs/server";
 import { prisma } from "@/lib/prisma";
 
-// Helper to authenticate request and verify resume ownership
-async function verifyResumeOwnership(resumeId: string, clerkUserId: string) {
-  const dbUser = await prisma.user.findUnique({
+// Helper to get database User ID from Clerk ID, creating the user if missing
+async function getOrCreateDbUser(clerkUserId: string) {
+  const existingUser = await prisma.user.findUnique({
     where: { clerkId: clerkUserId },
   });
 
-  if (!dbUser) return null;
+  if (existingUser) return existingUser;
 
-  const resume = await prisma.resume.findUnique({
-    where: { id: resumeId },
-  });
-
-  if (!resume || resume.userId !== dbUser.id) {
-    return null;
+  // Retrieve full details from Clerk API to populate db
+  const clerkUser = await currentUser();
+  if (!clerkUser) {
+    throw new Error("Unable to fetch user details from Clerk");
   }
 
-  return { dbUser, resume };
+  const email = clerkUser.emailAddresses[0]?.emailAddress || `${clerkUserId}@noemail.com`;
+  const name = `${clerkUser.firstName || ""} ${clerkUser.lastName || ""}`.trim() || null;
+  const imageUrl = clerkUser.imageUrl || null;
+
+  return await prisma.user.create({
+    data: {
+      clerkId: clerkUserId,
+      email,
+      name,
+      imageUrl,
+    },
+  });
+}
+
+// Helper to authenticate request and verify resume ownership
+async function verifyResumeOwnership(resumeId: string, clerkUserId: string) {
+  try {
+    const dbUser = await getOrCreateDbUser(clerkUserId);
+
+    const resume = await prisma.resume.findUnique({
+      where: { id: resumeId },
+    });
+
+    if (!resume || resume.userId !== dbUser.id) {
+      return null;
+    }
+
+    return { dbUser, resume };
+  } catch (error) {
+    console.error("verifyResumeOwnership user sync error:", error);
+    return null;
+  }
 }
 
 /**
