@@ -3,12 +3,70 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Sparkles, ArrowRight, ShieldCheck, Cpu } from "lucide-react";
+import { 
+  Sparkles, 
+  ArrowRight, 
+  ShieldCheck, 
+  Cpu, 
+  Code2, 
+  Database, 
+  Flame, 
+  Award, 
+  TrendingUp, 
+  FileText 
+} from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+
+const CAROUSEL_ITEMS = [
+  {
+    text: "TypeScript",
+    icon: Code2,
+    iconColor: "text-blue-400",
+  },
+  {
+    text: "React 19",
+    icon: Cpu,
+    iconColor: "text-cyan-400 animate-[spin_8s_linear_infinite]",
+  },
+  {
+    text: "Google Gemini AI",
+    icon: Sparkles,
+    iconColor: "text-violet-400 animate-pulse",
+    highlight: true,
+  },
+  {
+    text: "PostgreSQL",
+    icon: Database,
+    iconColor: "text-indigo-400",
+  },
+  {
+    text: "Tailwind CSS v4",
+    icon: Flame,
+    iconColor: "text-amber-500",
+  },
+  {
+    text: "ATS Scoring 95%",
+    icon: Award,
+    iconColor: "text-emerald-400",
+    highlight: true,
+  },
+  {
+    text: "XYZ Metric Optimization",
+    icon: TrendingUp,
+    iconColor: "text-rose-400",
+  },
+  {
+    text: "Georgia Serif Templates",
+    icon: FileText,
+    iconColor: "text-amber-400",
+  },
+];
+
+const doubleItems = [...CAROUSEL_ITEMS, ...CAROUSEL_ITEMS, ...CAROUSEL_ITEMS, ...CAROUSEL_ITEMS];
 
 export function Hero() {
   return (
-    <section className="relative min-h-[calc(100vh-3.5rem)] flex items-center justify-center overflow-hidden px-4 sm:px-6 lg:px-8 py-16 md:py-24 bg-zinc-950 font-sans">
+    <section className="relative min-h-[calc(100vh-3.5rem)] flex flex-col justify-center overflow-hidden px-4 sm:px-6 lg:px-8 py-16 md:py-24 bg-zinc-950 font-sans">
       {/* Background Neon Glow circles */}
       <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] rounded-full bg-violet-600/10 blur-[100px] pointer-events-none" />
       <div className="absolute bottom-1/4 right-1/4 translate-x-1/2 translate-y-1/2 w-[400px] h-[400px] rounded-full bg-indigo-600/10 blur-[100px] pointer-events-none" />
@@ -150,7 +208,42 @@ export function Hero() {
             </div>
           </div>
         </motion.div>
+      </div>
 
+      {/* Typographic Infinite Scroll Carousel */}
+      <div className="relative z-20 mt-20 md:mt-28 pt-8 border-t border-zinc-900/60 overflow-hidden select-none -mx-4 sm:-mx-6 lg:-mx-8 w-[calc(100%+2rem)] sm:w-[calc(100%+3rem)] lg:w-[calc(100%+4rem)]">
+        {/* Left & Right Glass-Fade Overlays */}
+        <div className="absolute inset-y-0 left-0 w-20 sm:w-32 md:w-48 bg-gradient-to-r from-zinc-950 to-transparent pointer-events-none z-10" />
+        <div className="absolute inset-y-0 right-0 w-20 sm:w-32 md:w-48 bg-gradient-to-l from-zinc-950 to-transparent pointer-events-none z-10" />
+
+        {/* Carousel Container with hover pause */}
+        <div className="pause-on-hover overflow-hidden py-2">
+          <div className="animate-infinite-carousel flex gap-4 md:gap-6 px-4">
+            {doubleItems.map((item, idx) => {
+              const Icon = item.icon;
+              return (
+                <div
+                  key={idx}
+                  className={`flex items-center gap-2.5 px-4 md:px-5 py-2.5 rounded-full border transition-all duration-300 backdrop-blur-md cursor-default
+                    ${item.highlight 
+                      ? 'bg-violet-500/10 border-violet-500/20 shadow-[0_0_15px_rgba(139,92,246,0.1)] hover:border-violet-500/40 hover:bg-violet-500/15' 
+                      : 'bg-zinc-900/40 border-zinc-800/80 hover:border-zinc-700 hover:bg-zinc-800/50'
+                    }`}
+                >
+                  <Icon className={`size-4 md:size-[18px] shrink-0 ${item.iconColor || 'text-zinc-400'}`} />
+                  <span className={`text-xs md:text-sm font-medium tracking-wide whitespace-nowrap
+                    ${item.highlight 
+                      ? 'bg-gradient-to-r from-violet-300 via-indigo-200 to-violet-300 bg-clip-text text-transparent font-semibold' 
+                      : 'text-zinc-300'
+                    }`}
+                  >
+                    {item.text}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
       </div>
     </section>
   );

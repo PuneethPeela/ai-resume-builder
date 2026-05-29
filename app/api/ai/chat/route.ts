@@ -1,11 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
-import { auth, currentUser } from "@clerk/nextjs/server";
+import { currentUser } from "@clerk/nextjs/server";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { geminiChatModel, isMockMode } from "@/lib/gemini";
 import { getMockChatResponse } from "@/lib/mock-responses";
 import { checkRateLimit } from "@/lib/rate-limit";
 import type { ChatResponse, ApiResponse } from "@/types/api";
+import { getSessionUser } from "@/lib/auth-helper";
 
 const requestSchema = z.object({
   message: z.string(),
@@ -22,14 +23,22 @@ async function getOrCreateDbUser(clerkUserId: string) {
 
   if (existingUser) return existingUser;
 
-  const clerkUser = await currentUser();
-  if (!clerkUser) {
-    throw new Error("Unable to fetch user details from Clerk");
-  }
+  let email = `${clerkUserId}@noemail.com`;
+  let name = clerkUserId.startsWith("mock_") 
+    ? clerkUserId.replace("mock_", "").split("_")[0] 
+    : "Reviewer Candidate";
+  let imageUrl = null;
 
-  const email = clerkUser.emailAddresses[0]?.emailAddress || `${clerkUserId}@noemail.com`;
-  const name = `${clerkUser.firstName || ""} ${clerkUser.lastName || ""}`.trim() || null;
-  const imageUrl = clerkUser.imageUrl || null;
+  try {
+    const clerkUser = await currentUser();
+    if (clerkUser) {
+      email = clerkUser.emailAddresses[0]?.emailAddress || email;
+      name = `${clerkUser.firstName || ""} ${clerkUser.lastName || ""}`.trim() || name;
+      imageUrl = clerkUser.imageUrl || null;
+    }
+  } catch {
+    // Clerk unconfigured
+  }
 
   return await prisma.user.create({
     data: {
@@ -47,7 +56,7 @@ async function getOrCreateDbUser(clerkUserId: string) {
  */
 export async function GET(req: NextRequest) {
   try {
-    const { userId } = await auth();
+    const userId = await getSessionUser();
     if (!userId) {
       return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
     }
@@ -80,7 +89,7 @@ export async function GET(req: NextRequest) {
  */
 export async function POST(req: NextRequest) {
   try {
-    const { userId } = await auth();
+    const userId = await getSessionUser();
     const identifier = userId ? `ai-chat-${userId}` : "ai-chat-anonymous";
 
     const limitResult = await checkRateLimit(identifier);
@@ -202,7 +211,7 @@ User Message: "${message}"`;
  */
 export async function DELETE(req: NextRequest) {
   try {
-    const { userId } = await auth();
+    const userId = await getSessionUser();
     if (!userId) {
       return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
     }

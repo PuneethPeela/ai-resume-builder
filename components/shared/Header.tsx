@@ -7,6 +7,8 @@ import { ThemeToggle } from "./ThemeToggle";
 import { SaveIndicator } from "./SaveIndicator";
 import { ATSScoreCard } from "./ATSScoreCard";
 import { PDFPreviewModal } from "../pdf/PDFPreviewModal";
+import { ShareWidget } from "../editor/ShareWidget";
+import { CoverLetterModal } from "../editor/CoverLetterModal";
 import { Sparkles, ArrowLeft, LayoutDashboard } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -54,6 +56,8 @@ export function Header() {
         {isEditor && (
           <div className="flex items-center gap-2 mr-1">
             <ATSScoreCard />
+            <CoverLetterModal />
+            <ShareWidget />
             <PDFPreviewModal />
           </div>
         )}

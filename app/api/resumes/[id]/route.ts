@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { auth, currentUser } from "@clerk/nextjs/server";
+import { currentUser } from "@clerk/nextjs/server";
 import { prisma } from "@/lib/prisma";
+import { getSessionUser } from "@/lib/auth-helper";
 
 // Helper to get database User ID from Clerk ID, creating the user if missing
 async function getOrCreateDbUser(clerkUserId: string) {
@@ -10,15 +11,22 @@ async function getOrCreateDbUser(clerkUserId: string) {
 
   if (existingUser) return existingUser;
 
-  // Retrieve full details from Clerk API to populate db
-  const clerkUser = await currentUser();
-  if (!clerkUser) {
-    throw new Error("Unable to fetch user details from Clerk");
-  }
+  let email = `${clerkUserId}@noemail.com`;
+  let name = clerkUserId.startsWith("mock_") 
+    ? clerkUserId.replace("mock_", "").split("_")[0] 
+    : "Reviewer Candidate";
+  let imageUrl = null;
 
-  const email = clerkUser.emailAddresses[0]?.emailAddress || `${clerkUserId}@noemail.com`;
-  const name = `${clerkUser.firstName || ""} ${clerkUser.lastName || ""}`.trim() || null;
-  const imageUrl = clerkUser.imageUrl || null;
+  try {
+    const clerkUser = await currentUser();
+    if (clerkUser) {
+      email = clerkUser.emailAddresses[0]?.emailAddress || email;
+      name = `${clerkUser.firstName || ""} ${clerkUser.lastName || ""}`.trim() || name;
+      imageUrl = clerkUser.imageUrl || null;
+    }
+  } catch {
+    // Clerk unconfigured
+  }
 
   return await prisma.user.create({
     data: {
@@ -60,7 +68,7 @@ export async function GET(
 ) {
   try {
     const { id } = await params;
-    const { userId: clerkUserId } = await auth();
+    const clerkUserId = await getSessionUser();
     if (!clerkUserId) {
       return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
     }
@@ -87,7 +95,7 @@ export async function PUT(
 ) {
   try {
     const { id } = await params;
-    const { userId: clerkUserId } = await auth();
+    const clerkUserId = await getSessionUser();
     if (!clerkUserId) {
       return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
     }
@@ -128,7 +136,7 @@ export async function DELETE(
 ) {
   try {
     const { id } = await params;
-    const { userId: clerkUserId } = await auth();
+    const clerkUserId = await getSessionUser();
     if (!clerkUserId) {
       return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
     }

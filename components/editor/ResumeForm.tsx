@@ -11,6 +11,7 @@ import { SkillsSection } from "./SkillsSection";
 import { ProjectsSection } from "./ProjectsSection";
 import { CertificationsSection } from "./CertificationsSection";
 import { TemplateSelector } from "./TemplateSelector";
+import { PlatformImportDialog } from "./PlatformImportDialog";
 import { User, FileText, Briefcase, GraduationCap, Wrench, FolderGit2, Award, Layout, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import type { ApiResponse, GenerateSummaryResponse } from "@/types/api";
@@ -59,6 +60,9 @@ export function ResumeForm() {
     <div className="space-y-4">
       {/* Template selector is prominently pinned at the top */}
       <TemplateSelector />
+
+      {/* Platform integrations importer widget */}
+      <PlatformImportDialog />
 
       <Accordion defaultValue={["personal-info"]} className="space-y-3">
         {/* Personal Info */}

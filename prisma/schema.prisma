@@ -11,15 +11,19 @@ datasource db {
 }
 
 model User {
-  id        String        @id @default(cuid())
-  clerkId   String        @unique
-  email     String        @unique
-  name      String?
-  imageUrl  String?
-  resumes   Resume[]
-  chats     ChatMessage[]
-  createdAt DateTime      @default(now())
-  updatedAt DateTime      @updatedAt
+  id                 String        @id @default(cuid())
+  clerkId            String        @unique
+  email              String        @unique
+  name               String?
+  imageUrl           String?
+  role               String        @default("user") // "user" | "admin" | "sub_admin"
+  password           String?       // encrypted password for local auth
+  promotionRequested Boolean       @default(false)
+  promotionRole      String?       // "admin" | "sub_admin"
+  resumes            Resume[]
+  chats              ChatMessage[]
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
 }
 
 model Resume {

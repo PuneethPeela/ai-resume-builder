@@ -2,7 +2,10 @@
 
 import { useUser } from "@clerk/nextjs";
 import { ResumeGrid } from "@/components/dashboard/ResumeGrid";
-import { Sparkles, Terminal, FileText, CheckCircle2 } from "lucide-react";
+import { PromotionControl } from "@/components/dashboard/PromotionControl";
+import { Sparkles, Terminal, ArrowRight, CheckCircle2 } from "lucide-react";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 export default function DashboardPage() {
   const { user, isLoaded } = useUser();
@@ -16,14 +19,23 @@ export default function DashboardPage() {
         {/* Glow backdrop decorator */}
         <div className="absolute top-0 right-0 w-80 h-full bg-violet-600/5 blur-3xl pointer-events-none rounded-full" />
         
-        <div className="space-y-1 relative z-10">
-          <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-zinc-100 flex items-center gap-2">
-            <span>Welcome back{isLoaded && firstName ? `, ${firstName}` : ""}</span>
-            <Sparkles className="size-5 text-violet-400 animate-pulse" />
-          </h2>
-          <p className="text-xs sm:text-sm text-zinc-500">
-            Build, optimize, and tailor your professional resumes. Run AI audits to verify ATS compatibility.
-          </p>
+        <div className="space-y-3 relative z-10">
+          <div className="space-y-1">
+            <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-zinc-100 flex items-center gap-2">
+              <span>Welcome back{isLoaded && firstName ? `, ${firstName}` : ""}</span>
+              <Sparkles className="size-5 text-violet-400 animate-pulse" />
+            </h2>
+            <p className="text-xs sm:text-sm text-zinc-500">
+              Build, optimize, and tailor your professional resumes. Run AI audits to verify ATS compatibility.
+            </p>
+          </div>
+          
+          <Link href="/dashboard/resources" className="inline-block">
+            <Button size="sm" className="bg-violet-600 hover:bg-violet-500 text-white font-semibold text-xs gap-1">
+              <span>Explore Interview & Job Hub</span>
+              <ArrowRight className="size-3" />
+            </Button>
+          </Link>
         </div>
 
         {/* Small Tech Credit box */}
@@ -38,6 +50,9 @@ export default function DashboardPage() {
           </div>
         </div>
       </div>
+
+      {/* Access Control & Promotion Panel */}
+      <PromotionControl />
 
       {/* Main Grid workspace */}
       <ResumeGrid />

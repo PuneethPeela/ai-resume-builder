@@ -6,6 +6,8 @@ import { useState, type ReactNode } from "react";
 import { Toaster } from "sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
+import { SecretAdminTrigger } from "@/components/shared/SecretAdminTrigger";
+
 interface ProvidersProps {
   children: ReactNode;
 }
@@ -38,6 +40,7 @@ export function Providers({ children }: ProvidersProps) {
         <TooltipProvider>
           {children}
         </TooltipProvider>
+        <SecretAdminTrigger />
         <Toaster
           position="bottom-right"
           richColors

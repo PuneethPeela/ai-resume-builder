@@ -209,3 +209,24 @@
 .ai-dot-1 { animation: pulse-dot 1.4s infinite ease-in-out; }
 .ai-dot-2 { animation: pulse-dot 1.4s infinite ease-in-out 0.2s; }
 .ai-dot-3 { animation: pulse-dot 1.4s infinite ease-in-out 0.4s; }
+
+/* ── Typographic Infinite Carousel ── */
+@keyframes translate-loop {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.animate-infinite-carousel {
+  display: flex;
+  width: max-content;
+  animation: translate-loop 35s linear infinite;
+  will-change: transform;
+}
+
+.pause-on-hover:hover .animate-infinite-carousel {
+  animation-play-state: paused;
+}

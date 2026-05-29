@@ -51,7 +51,7 @@ This project was built as a full-stack internship selection assignment showcasin
 graph TD
     A[Next.js 14 Client App Router] -->|State Management| B(Zustand Store + Persist)
     A -->|Authentication| C[Clerk OAuth]
-    A -->|Local PDF Compilation| D[@react-pdf/renderer]
+    A -->|Local PDF Compilation| D["@react-pdf/renderer"]
     
     A -->|API Requests| E[Next.js Server API Routes]
     E -->|Database Operations| F[Prisma ORM Client]

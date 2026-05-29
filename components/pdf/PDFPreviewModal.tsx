@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button";
 import { usePDFExport } from "@/hooks/usePDFExport";
 import { useResumeStore } from "@/stores/resumeStore";
 import { FileDown, ShieldCheck, Mail, Phone, MapPin, Sparkles, Loader2 } from "lucide-react";
+import { exportToJSON, exportToDOCX } from "@/lib/exporters";
+import { toast } from "sonner";
 
 export function PDFPreviewModal() {
   const { resumeData, template } = useResumeStore();
@@ -76,6 +78,40 @@ export function PDFPreviewModal() {
             <p>
               Your PDF is compiled directly in the browser as a standard high-quality vector document, ensuring clean typography and perfect margins for physical print.
             </p>
+          </div>
+
+          {/* Alternative Exporters */}
+          <div className="space-y-2.5 pt-1">
+            <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider">Alternative Export Formats</p>
+            <div className="grid grid-cols-2 gap-2">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => {
+                  if (resumeData) {
+                    exportToDOCX(resumeData, fullName || "resume");
+                    toast.success("DOCX Export generated!");
+                  }
+                }}
+                className="border-zinc-800 bg-zinc-900/40 text-zinc-300 hover:bg-zinc-800/40 hover:text-zinc-100 flex items-center justify-center gap-1.5 py-2 h-9 text-xs font-sans font-medium"
+              >
+                <span>Word Document (.docx)</span>
+              </Button>
+              
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => {
+                  if (resumeData) {
+                    exportToJSON(resumeData, fullName || "resume");
+                    toast.success("JSON Export downloaded!");
+                  }
+                }}
+                className="border-zinc-800 bg-zinc-900/40 text-zinc-300 hover:bg-zinc-800/40 hover:text-zinc-100 flex items-center justify-center gap-1.5 py-2 h-9 text-xs font-sans font-medium"
+              >
+                <span>Raw JSON (.json)</span>
+              </Button>
+            </div>
           </div>
         </div>
 

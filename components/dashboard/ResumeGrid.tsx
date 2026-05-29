@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { ResumeCard } from "./ResumeCard";
 import { CreateResumeButton } from "./CreateResumeButton";
+import { ImportResumeButton } from "./ImportResumeButton";
 import { Skeleton } from "@/components/ui/skeleton";
 import { FilePlus2, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -75,6 +76,9 @@ export function ResumeGrid() {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {/* Create new button always sits first */}
         <CreateResumeButton />
+
+        {/* Import from file card sits second */}
+        <ImportResumeButton />
 
         {/* Existing resumes list */}
         {resumes.map((resume) => (

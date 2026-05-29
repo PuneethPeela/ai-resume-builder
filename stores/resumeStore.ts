@@ -23,6 +23,7 @@ interface ResumeState {
   resumeId: string | null;
   isDirty: boolean;
   lastSavedAt: Date | null;
+  isPublic: boolean;
 
   // ── Actions: Resume Data ──
   setResumeData: (data: ResumeFormData) => void;
@@ -57,9 +58,10 @@ interface ResumeState {
   // ── Actions: Meta ──
   setTemplate: (template: TemplateName) => void;
   setResumeId: (id: string | null) => void;
+  setIsPublic: (isPublic: boolean) => void;
   markSaved: () => void;
   resetResume: () => void;
-  loadResume: (data: ResumeFormData, id: string, template: TemplateName) => void;
+  loadResume: (data: ResumeFormData, id: string, template: TemplateName, isPublic?: boolean) => void;
 }
 
 export const useResumeStore = create<ResumeState>()(
@@ -72,6 +74,7 @@ export const useResumeStore = create<ResumeState>()(
         resumeId: null,
         isDirty: false,
         lastSavedAt: null,
+        isPublic: false,
 
         // ── Resume Data ──
         setResumeData: (data) =>
@@ -351,6 +354,8 @@ export const useResumeStore = create<ResumeState>()(
 
         setResumeId: (id) => set({ resumeId: id }, false, "setResumeId"),
 
+        setIsPublic: (isPublic) => set({ isPublic }, false, "setIsPublic"),
+
         markSaved: () =>
           set({ isDirty: false, lastSavedAt: new Date() }, false, "markSaved"),
 
@@ -362,17 +367,19 @@ export const useResumeStore = create<ResumeState>()(
               resumeId: null,
               isDirty: false,
               lastSavedAt: null,
+              isPublic: false,
             },
             false,
             "resetResume"
           ),
 
-        loadResume: (data, id, template) =>
+        loadResume: (data, id, template, isPublic = false) =>
           set(
             {
               resumeData: data,
               resumeId: id,
               template,
+              isPublic,
               isDirty: false,
               lastSavedAt: new Date(),
             },
@@ -386,6 +393,7 @@ export const useResumeStore = create<ResumeState>()(
           resumeData: state.resumeData,
           template: state.template,
           resumeId: state.resumeId,
+          isPublic: state.isPublic,
         }),
       }
     ),

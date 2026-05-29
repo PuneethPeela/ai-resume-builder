@@ -49,7 +49,7 @@ export default function ResumeEditorPage() {
 
         if (result.success && result.data) {
           // Load fetched resume into Zustand store
-          loadResume(result.data.data, result.data.id, result.data.template);
+          loadResume(result.data.data, result.data.id, result.data.template, result.data.isPublic);
           toast.success(`Loaded "${result.data.title || "Resume"}"`);
         } else {
           setError(result.error || "Failed to load resume.");

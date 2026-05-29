@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@clerk/nextjs/server";
+import { getSessionUser } from "@/lib/auth-helper";
 import { z } from "zod";
 import { geminiModel, isMockMode } from "@/lib/gemini";
 import { MOCK_IMPROVE_BULLET } from "@/lib/mock-responses";
@@ -14,7 +14,7 @@ const requestSchema = z.object({
 
 export async function POST(req: NextRequest) {
   try {
-    const { userId } = await auth();
+    const userId = await getSessionUser();
     const identifier = userId ? `ai-bullet-${userId}` : "ai-bullet-anonymous";
 
     const limitResult = await checkRateLimit(identifier);
