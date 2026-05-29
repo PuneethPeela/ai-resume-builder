@@ -135,17 +135,14 @@
 
 /* ── Custom Utilities ── */
 
-/* Glassmorphism card */
+/* Premium High-Contrast Glassmorphism card (Futuristic Abstract Technical Theme) */
 .glass {
-  background: oklch(0.178 0.028 280 / 50%);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid oklch(1 0 0 / 8%);
-}
-
-:root .glass {
-  background: oklch(1 0 0 / 70%);
-  border: 1px solid oklch(0.922 0.004 285 / 60%);
+  background: rgba(9, 9, 11, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(139, 92, 246, 0.25);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4),
+              inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
 }
 
 /* Animated gradient hero background */

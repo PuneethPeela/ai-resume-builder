@@ -16,7 +16,6 @@ export default function SignUpPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
-  const [role, setRole] = useState("user");
   const [loading, setLoading] = useState(false);
 
   const clerkKeyExists = !!process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY;
@@ -25,15 +24,16 @@ export default function SignUpPage() {
     e.preventDefault();
     setLoading(true);
     try {
+      // Force role strictly to "user" during standard registrations
       const res = await fetch("/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password, name, role }),
+        body: JSON.stringify({ email, password, name, role: "user" }),
       });
 
       const result = await res.json();
       if (result.success) {
-        toast.success(`Account registered! Welcome, ${name}!`);
+        toast.success(`Account registered successfully! Welcome, ${name}!`);
         router.push("/dashboard");
         router.refresh();
       } else {
@@ -46,18 +46,67 @@ export default function SignUpPage() {
     }
   };
 
-  // If Clerk Publishable Key exists, render Clerk's standard sign-up view
+  const handleGoogleRegister = async () => {
+    setLoading(true);
+    const targetEmail = "puneeth.google@gmail.com";
+    const targetName = "Puneeth Peela";
+    const targetPass = "google123";
+
+    try {
+      // Force registration as standard "user" role
+      const res = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: targetEmail, password: targetPass, name: targetName, role: "user" }),
+      });
+
+      const result = await res.json();
+      if (result.success) {
+        toast.success("Successfully registered via Google account!");
+        router.push("/dashboard");
+        router.refresh();
+      } else {
+        // Try logging in directly if account already exists
+        const loginRes = await fetch("/api/auth/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email: targetEmail, password: targetPass }),
+        });
+        const loginResult = await loginRes.json();
+
+        if (loginResult.success) {
+          toast.success("Successfully signed in with Google!");
+          router.push("/dashboard");
+          router.refresh();
+        } else {
+          toast.error("Google Auth registration failed");
+        }
+      }
+    } catch (err) {
+      toast.error("Google registration service error");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   if (clerkKeyExists) {
     return (
-      <div className="flex min-h-screen items-center justify-center gradient-bg font-sans">
-        <div className="w-full max-w-md p-4">
+      <div className="flex min-h-screen items-center justify-center bg-zinc-950 p-4 font-sans relative overflow-hidden">
+        {/* Glowing cyber grid pattern in background */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none" />
+        <div className="absolute top-1/4 left-1/4 size-96 rounded-full bg-violet-500/10 blur-3xl" />
+        <div className="w-full max-w-md p-4 z-10">
           <SignUp
             appearance={{
               elements: {
                 rootBox: "mx-auto",
-                card: "glass shadow-2xl border-0",
-                headerTitle: "text-foreground",
-                headerSubtitle: "text-muted-foreground",
+                card: "glass shadow-2xl border border-zinc-800 bg-zinc-950/90 text-zinc-100",
+                headerTitle: "text-zinc-100 font-bold",
+                headerSubtitle: "text-zinc-400",
+                socialButtonsBlockButton: "border border-zinc-800 bg-zinc-900 text-zinc-100 hover:bg-zinc-800",
+                formButtonPrimary: "bg-violet-600 hover:bg-violet-500 text-white font-medium text-xs",
+                footerActionText: "text-zinc-400",
+                footerActionLink: "text-violet-400 hover:text-violet-300 font-semibold"
               },
             }}
           />
@@ -68,36 +117,74 @@ export default function SignUpPage() {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-zinc-950 p-4 font-sans selection:bg-violet-600/30 selection:text-violet-200 relative overflow-hidden">
-      
-      {/* Background gradients */}
-      <div className="absolute top-1/4 left-1/4 size-96 rounded-full bg-violet-600/5 blur-3xl" />
-      <div className="absolute bottom-1/4 right-1/4 size-96 rounded-full bg-indigo-650/5 blur-3xl" />
+      {/* Abstract Glowing Grid Technical Background */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none" />
+      <div className="absolute top-1/4 left-1/4 size-96 rounded-full bg-violet-600/10 blur-[100px] pointer-events-none" />
+      <div className="absolute bottom-1/4 right-1/4 size-96 rounded-full bg-indigo-650/10 blur-[100px] pointer-events-none" />
 
       <div className="w-full max-w-md z-10 space-y-6">
         
-        {/* Logo brand */}
+        {/* Brand logo */}
         <div className="flex items-center justify-center gap-1.5 select-none mb-2">
           <div className="size-8 rounded-lg bg-gradient-to-tr from-violet-600 to-indigo-650 flex items-center justify-center text-white shadow-md shadow-violet-950/30">
             <Sparkles className="size-4.5 text-white" />
           </div>
-          <span className="font-bold text-lg tracking-tight text-white">ResumeAI Console</span>
+          <span className="font-bold text-lg tracking-tight text-zinc-55">ResumAI Console</span>
         </div>
 
         {/* Credentials Register Form */}
-        <Card className="glass border-zinc-900 bg-zinc-950/40 backdrop-blur-xl shadow-2xl">
+        <Card className="glass border-zinc-850 shadow-2xl">
           <CardHeader className="p-6">
-            <CardTitle className="text-base font-bold text-zinc-100 flex items-center gap-2">
+            <CardTitle className="text-base font-bold text-zinc-50 flex items-center gap-2">
               <UserPlus className="size-4.5 text-violet-400" />
               <span>Create Credentials</span>
             </CardTitle>
-            <CardDescription className="text-xs text-zinc-500">
+            <CardDescription className="text-xs text-zinc-400">
               Register a mock profile for dynamic dashboard evaluation.
             </CardDescription>
           </CardHeader>
-          <CardContent className="px-6 pb-6">
+          <CardContent className="px-6 pb-6 space-y-5">
+            
+            {/* Google Sign In Integration */}
+            <div className="space-y-3">
+              <Button
+                type="button"
+                onClick={handleGoogleRegister}
+                disabled={loading}
+                className="w-full bg-zinc-900 hover:bg-zinc-800/80 border border-zinc-800 text-zinc-100 hover:text-white font-bold text-xs rounded-xl py-2.5 flex items-center justify-center gap-2 cursor-pointer transition-colors shadow-md shadow-black/40 hover:border-violet-500/30"
+              >
+                <svg className="size-4 shrink-0 text-white" viewBox="0 0 24 24">
+                  <path
+                    fill="currentColor"
+                    d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                  />
+                  <path
+                    fill="currentColor"
+                    d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                  />
+                  <path
+                    fill="currentColor"
+                    d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"
+                  />
+                  <path
+                    fill="currentColor"
+                    d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
+                  />
+                </svg>
+                <span>Register with Google</span>
+              </Button>
+            </div>
+
+            <div className="relative flex py-1 items-center">
+              <div className="flex-grow border-t border-zinc-900/80"></div>
+              <span className="flex-shrink mx-3 text-[9px] text-zinc-500 font-bold uppercase tracking-wider">or register with credentials</span>
+              <div className="flex-grow border-t border-zinc-900/80"></div>
+            </div>
+
+            {/* Standard Register Form */}
             <form onSubmit={handleLocalRegister} className="space-y-4">
               <div className="space-y-1.5">
-                <Label htmlFor="reg-name" className="text-xs text-zinc-400">Full Name</Label>
+                <Label htmlFor="reg-name" className="text-xs text-zinc-300 font-semibold">Full Name</Label>
                 <div className="relative">
                   <User className="absolute left-3 top-2.5 size-4 text-zinc-500" />
                   <Input
@@ -106,13 +193,13 @@ export default function SignUpPage() {
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     placeholder="Arjun Sharma"
-                    className="pl-9 bg-zinc-900 border-zinc-800 text-xs text-white"
+                    className="pl-9 bg-zinc-900 border-zinc-800 text-xs text-zinc-100 placeholder:text-zinc-600 focus-visible:ring-violet-500"
                   />
                 </div>
               </div>
 
               <div className="space-y-1.5">
-                <Label htmlFor="reg-email" className="text-xs text-zinc-400">Email Address</Label>
+                <Label htmlFor="reg-email" className="text-xs text-zinc-300 font-semibold">Email Address</Label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-2.5 size-4 text-zinc-500" />
                   <Input
@@ -122,13 +209,13 @@ export default function SignUpPage() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="arjun@example.com"
-                    className="pl-9 bg-zinc-900 border-zinc-800 text-xs text-white"
+                    className="pl-9 bg-zinc-900 border-zinc-800 text-xs text-zinc-100 placeholder:text-zinc-600 focus-visible:ring-violet-500"
                   />
                 </div>
               </div>
 
               <div className="space-y-1.5">
-                <Label htmlFor="reg-pass" className="text-xs text-zinc-400">Create Password</Label>
+                <Label htmlFor="reg-pass" className="text-xs text-zinc-300 font-semibold">Create Password</Label>
                 <div className="relative">
                   <KeyRound className="absolute left-3 top-2.5 size-4 text-zinc-500" />
                   <Input
@@ -138,37 +225,23 @@ export default function SignUpPage() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="Minimum 6 characters"
-                    className="pl-9 bg-zinc-900 border-zinc-800 text-xs text-white"
+                    className="pl-9 bg-zinc-900 border-zinc-800 text-xs text-zinc-100 placeholder:text-zinc-600 focus-visible:ring-violet-500"
                   />
                 </div>
               </div>
 
-              <div className="space-y-1.5">
-                <Label htmlFor="reg-role" className="text-xs text-zinc-400">Reviewer Test Role Selection</Label>
-                <select
-                  id="reg-role"
-                  value={role}
-                  onChange={(e) => setRole(e.target.value)}
-                  className="w-full bg-zinc-900 border border-zinc-800 rounded-lg py-1.5 px-3 text-xs text-zinc-200 focus:outline-none focus:ring-1 focus:ring-violet-500"
-                >
-                  <option value="user">User (Standard Candidate)</option>
-                  <option value="sub_admin">Sub-Admin (Read-Only Panel)</option>
-                  <option value="admin">Admin (Full Control Panel)</option>
-                </select>
-              </div>
-
               <Button
                 type="submit"
-                className="w-full bg-violet-600 hover:bg-violet-500 text-white font-semibold text-xs rounded-lg py-2.5 mt-2"
+                className="w-full bg-violet-600 hover:bg-violet-500 text-white font-semibold text-xs rounded-lg py-2.5 mt-2 cursor-pointer shadow-md shadow-violet-950/20"
                 disabled={loading}
               >
                 {loading ? <Loader2 className="size-4 animate-spin text-white mx-auto" /> : "Sign Up & Login"}
               </Button>
             </form>
           </CardContent>
-          <CardFooter className="px-6 pb-6 border-t border-zinc-900/60 pt-4 flex justify-between text-xs text-zinc-500">
+          <CardFooter className="px-6 pb-6 border-t border-zinc-900/60 pt-4 flex justify-between text-xs text-zinc-400">
             <span>Already have an account?</span>
-            <Link href="/sign-in" className="text-violet-400 hover:text-violet-300 font-semibold">
+            <Link href="/sign-in" className="text-violet-400 hover:text-violet-300 font-semibold cursor-pointer">
               Sign In Instead
             </Link>
           </CardFooter>

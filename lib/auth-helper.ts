@@ -32,6 +32,6 @@ export async function getSessionUser(): Promise<string> {
     }
   }
 
-  // Fallback guest account to ensure active session and prevent 404s
-  return clerkUserId || "mock_clerk_arjun_sharma";
+  // Return empty string if no session is active to prevent unauthenticated access
+  return clerkUserId || "";
 }

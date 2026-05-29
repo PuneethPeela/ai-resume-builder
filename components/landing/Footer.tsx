@@ -64,7 +64,7 @@ export function Footer() {
                 Workspace
               </Link>
               <span>•</span>
-              <a href="https://github.com" target="_blank" rel="noreferrer" className="hover:text-violet-400 transition-colors">
+              <a href="https://github.com/PuneethPeela/ai-resume-builder" target="_blank" rel="noreferrer" className="hover:text-violet-400 transition-colors">
                 GitHub Repo
               </a>
             </div>

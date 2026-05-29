@@ -2,10 +2,10 @@ import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-const isProtectedRoute = createRouteMatcher([
-  "/dashboard(.*)",
-  "/api/ai(.*)",
-  "/api/resumes(.*)",
+const isPublicRoute = createRouteMatcher([
+  "/sign-in(.*)",
+  "/sign-up(.*)",
+  "/api/auth(.*)",
 ]);
 
 /**
@@ -14,11 +14,31 @@ const isProtectedRoute = createRouteMatcher([
  * site-wide 500 Middleware Invocation Failed errors, while preserving security headers.
  */
 export default function middleware(req: NextRequest) {
-  // If Clerk Publishable Key is missing, bypass auth protection to keep landing/mock pages accessible
+  // If Clerk Publishable Key is missing, enforce our own robust mock authentication checks
   if (!process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY) {
-    console.warn(
-      "WARNING: NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY is not configured. Clerk auth bypass active to prevent 500 crash."
-    );
+    const mockUserIdCookie = req.cookies.get("mock-user-id")?.value;
+    const { pathname } = req.nextUrl;
+
+    // Define public routes
+    const isPublic = pathname === "/sign-in" || 
+                     pathname === "/sign-up" || 
+                     pathname.startsWith("/api/auth") ||
+                     pathname.startsWith("/_next") ||
+                     pathname.includes(".");
+
+    if (!mockUserIdCookie && !isPublic) {
+      // Force redirect to sign-in page
+      const url = req.nextUrl.clone();
+      url.pathname = "/sign-in";
+      return NextResponse.redirect(url);
+    }
+
+    if (mockUserIdCookie && (pathname === "/sign-in" || pathname === "/sign-up" || pathname === "/")) {
+      // Redirect authenticated user to dashboard console
+      const url = req.nextUrl.clone();
+      url.pathname = "/dashboard";
+      return NextResponse.redirect(url);
+    }
 
     const response = NextResponse.next();
     
@@ -42,7 +62,7 @@ export default function middleware(req: NextRequest) {
 
   // Standard protected clerk middleware execution
   return clerkMiddleware(async (auth, req: NextRequest) => {
-    if (isProtectedRoute(req)) {
+    if (!isPublicRoute(req)) {
       await auth.protect();
     }
 

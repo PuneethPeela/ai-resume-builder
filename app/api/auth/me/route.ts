@@ -6,6 +6,10 @@ export async function GET() {
   try {
     const clerkUserId = await getSessionUser();
     
+    if (!clerkUserId) {
+      return NextResponse.json({ success: false, error: "Not Authenticated" }, { status: 401 });
+    }
+    
     // Find active user in db
     let user = await prisma.user.findUnique({
       where: { clerkId: clerkUserId },

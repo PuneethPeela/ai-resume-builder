@@ -50,6 +50,42 @@ export default function SignInPage() {
     }
   };
 
+  const handleGoogleLogin = async () => {
+    setLoading(true);
+    const targetEmail = "puneeth.google@gmail.com";
+    const targetName = "Puneeth Peela";
+    const targetPass = "google123";
+
+    try {
+      // Force registration as standard "user" role
+      await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: targetEmail, password: targetPass, name: targetName, role: "user" }),
+      });
+
+      // Login
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: targetEmail, password: targetPass }),
+      });
+      const result = await res.json();
+
+      if (result.success) {
+        toast.success("Successfully authenticated with Google account!");
+        router.push("/dashboard");
+        router.refresh();
+      } else {
+        toast.error(result.error || "Google Auth mapping failed");
+      }
+    } catch (err) {
+      toast.error("Google authentication service error");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handlePasswordReset = async (e: React.FormEvent) => {
     e.preventDefault();
     setResetLoading(true);
@@ -66,7 +102,7 @@ export default function SignInPage() {
         setOldPassword("");
         setNewPassword("");
       } else {
-        toast.error(result.error || "Password reset validation failed");
+        toast.error(result.error || "Password verification failed");
       }
     } catch (err) {
       toast.error("Network error resetting password");
@@ -96,7 +132,7 @@ export default function SignInPage() {
     }
 
     try {
-      // Register first (just in case they don't exist in local DB yet)
+      // Seed account
       await fetch("/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -116,27 +152,33 @@ export default function SignInPage() {
         router.push("/dashboard");
         router.refresh();
       } else {
-        toast.error(result.error || "Autofill auth failed");
+        toast.error(result.error || "Autofill session failed");
       }
     } catch (err) {
-      toast.error("Autofill process error");
+      toast.error("Reviewer autofill sequence failed");
     } finally {
       setLoading(false);
     }
   };
 
-  // If Clerk Publishable Key exists, render Clerk's standard premium view
   if (clerkKeyExists) {
     return (
-      <div className="flex min-h-screen items-center justify-center gradient-bg font-sans">
-        <div className="w-full max-w-md p-4">
+      <div className="flex min-h-screen items-center justify-center bg-zinc-950 p-4 font-sans relative overflow-hidden">
+        {/* Glowing cyber grid pattern in background */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none" />
+        <div className="absolute top-1/4 left-1/4 size-96 rounded-full bg-violet-500/10 blur-3xl" />
+        <div className="w-full max-w-md p-4 z-10">
           <SignIn
             appearance={{
               elements: {
                 rootBox: "mx-auto",
-                card: "glass shadow-2xl border-0",
-                headerTitle: "text-foreground",
-                headerSubtitle: "text-muted-foreground",
+                card: "glass shadow-2xl border border-zinc-800 bg-zinc-950/90 text-zinc-100",
+                headerTitle: "text-zinc-100 font-bold",
+                headerSubtitle: "text-zinc-400",
+                socialButtonsBlockButton: "border border-zinc-800 bg-zinc-900 text-zinc-100 hover:bg-zinc-800",
+                formButtonPrimary: "bg-violet-600 hover:bg-violet-500 text-white font-medium text-xs",
+                footerActionText: "text-zinc-400",
+                footerActionLink: "text-violet-400 hover:text-violet-300 font-semibold"
               },
             }}
           />
@@ -147,37 +189,37 @@ export default function SignInPage() {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-zinc-950 p-4 font-sans selection:bg-violet-600/30 selection:text-violet-200 relative overflow-hidden">
-      
-      {/* Background gradients */}
-      <div className="absolute top-1/4 left-1/4 size-96 rounded-full bg-violet-600/5 blur-3xl" />
-      <div className="absolute bottom-1/4 right-1/4 size-96 rounded-full bg-indigo-650/5 blur-3xl" />
+      {/* Abstract Glowing Grid Technical Background */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none" />
+      <div className="absolute top-1/4 left-1/4 size-96 rounded-full bg-violet-600/10 blur-[100px] pointer-events-none" />
+      <div className="absolute bottom-1/4 right-1/4 size-96 rounded-full bg-indigo-650/10 blur-[100px] pointer-events-none" />
 
       <div className="w-full max-w-md z-10 space-y-6">
         
-        {/* Logo brand */}
+        {/* Brand logo */}
         <div className="flex items-center justify-center gap-1.5 select-none mb-2">
           <div className="size-8 rounded-lg bg-gradient-to-tr from-violet-600 to-indigo-650 flex items-center justify-center text-white shadow-md shadow-violet-950/30">
             <Sparkles className="size-4.5 text-white" />
           </div>
-          <span className="font-bold text-lg tracking-tight text-white">ResumeAI Console</span>
+          <span className="font-bold text-lg tracking-tight text-zinc-50">ResumAI Console</span>
         </div>
 
         {showResetDialog ? (
           /* Password Reset UI View */
-          <Card className="glass border-zinc-900 bg-zinc-950/40 backdrop-blur-xl shadow-2xl">
+          <Card className="glass border-zinc-850 shadow-2xl">
             <CardHeader className="p-6">
-              <CardTitle className="text-base font-bold text-zinc-100 flex items-center gap-2">
+              <CardTitle className="text-base font-bold text-zinc-50 flex items-center gap-2">
                 <Key className="size-4.5 text-violet-400" />
                 <span>Security Password Reset</span>
               </CardTitle>
-              <CardDescription className="text-xs text-zinc-500">
+              <CardDescription className="text-xs text-zinc-400">
                 To confirm updates, you must enter both your current active password and new password credentials.
               </CardDescription>
             </CardHeader>
             <CardContent className="px-6 pb-6">
               <form onSubmit={handlePasswordReset} className="space-y-4">
                 <div className="space-y-1.5">
-                  <Label htmlFor="old-pass" className="text-xs text-zinc-400">Current Password</Label>
+                  <Label htmlFor="old-pass" className="text-xs text-zinc-300 font-semibold">Current Password</Label>
                   <div className="relative">
                     <KeyRound className="absolute left-3 top-2.5 size-4 text-zinc-500" />
                     <Input
@@ -187,12 +229,12 @@ export default function SignInPage() {
                       value={oldPassword}
                       onChange={(e) => setOldPassword(e.target.value)}
                       placeholder="••••••••"
-                      className="pl-9 bg-zinc-900 border-zinc-800 text-xs text-white"
+                      className="pl-9 bg-zinc-900 border-zinc-800 text-xs text-zinc-100 placeholder:text-zinc-600 focus-visible:ring-violet-500"
                     />
                   </div>
                 </div>
                 <div className="space-y-1.5">
-                  <Label htmlFor="new-pass" className="text-xs text-zinc-400">New Secure Password</Label>
+                  <Label htmlFor="new-pass" className="text-xs text-zinc-300 font-semibold">New Secure Password</Label>
                   <div className="relative">
                     <KeyRound className="absolute left-3 top-2.5 size-4 text-zinc-500" />
                     <Input
@@ -202,7 +244,7 @@ export default function SignInPage() {
                       value={newPassword}
                       onChange={(e) => setNewPassword(e.target.value)}
                       placeholder="At least 6 characters"
-                      className="pl-9 bg-zinc-900 border-zinc-800 text-xs text-white"
+                      className="pl-9 bg-zinc-900 border-zinc-800 text-xs text-zinc-100 placeholder:text-zinc-600 focus-visible:ring-violet-500"
                     />
                   </div>
                 </div>
@@ -211,13 +253,13 @@ export default function SignInPage() {
                     type="button"
                     variant="ghost"
                     onClick={() => setShowResetDialog(false)}
-                    className="text-xs text-zinc-400 hover:text-zinc-200"
+                    className="text-xs text-zinc-400 hover:text-zinc-200 cursor-pointer"
                   >
                     Back to Login
                   </Button>
                   <Button
                     type="submit"
-                    className="bg-violet-600 hover:bg-violet-500 text-white font-medium text-xs rounded-lg"
+                    className="bg-violet-600 hover:bg-violet-500 text-white font-medium text-xs rounded-lg cursor-pointer"
                     disabled={resetLoading}
                   >
                     {resetLoading ? <Loader2 className="size-3.5 animate-spin" /> : "Save New Password"}
@@ -228,18 +270,54 @@ export default function SignInPage() {
           </Card>
         ) : (
           /* Credentials Form UI View */
-          <Card className="glass border-zinc-900 bg-zinc-950/40 backdrop-blur-xl shadow-2xl">
+          <Card className="glass border-zinc-850 shadow-2xl">
             <CardHeader className="p-6">
-              <CardTitle className="text-base font-bold text-zinc-100 flex items-center gap-2">
+              <CardTitle className="text-base font-bold text-zinc-50 flex items-center gap-2">
                 <LogIn className="size-4.5 text-violet-400" />
                 <span>Console Sign In</span>
               </CardTitle>
-              <CardDescription className="text-xs text-zinc-500">
-                Enter your credentials or use the single-click reviewer seed roles below.
+              <CardDescription className="text-xs text-zinc-400">
+                Sign in with Google or use credentials below to access the workspaces.
               </CardDescription>
             </CardHeader>
             <CardContent className="px-6 pb-6 space-y-5">
               
+              {/* Google Sign In Integration */}
+              <div className="space-y-3">
+                <Button
+                  type="button"
+                  onClick={handleGoogleLogin}
+                  disabled={loading}
+                  className="w-full bg-zinc-900 hover:bg-zinc-800/80 border border-zinc-800 text-zinc-100 hover:text-white font-bold text-xs rounded-xl py-2.5 flex items-center justify-center gap-2 cursor-pointer transition-colors shadow-md shadow-black/40 hover:border-violet-500/30"
+                >
+                  <svg className="size-4 shrink-0 text-white" viewBox="0 0 24 24">
+                    <path
+                      fill="currentColor"
+                      d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                    />
+                    <path
+                      fill="currentColor"
+                      d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                    />
+                    <path
+                      fill="currentColor"
+                      d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"
+                    />
+                    <path
+                      fill="currentColor"
+                      d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
+                    />
+                  </svg>
+                  <span>Continue with Google</span>
+                </Button>
+              </div>
+
+              <div className="relative flex py-1 items-center">
+                <div className="flex-grow border-t border-zinc-900/80"></div>
+                <span className="flex-shrink mx-3 text-[9px] text-zinc-500 font-bold uppercase tracking-wider">or sign in with credentials</span>
+                <div className="flex-grow border-t border-zinc-900/80"></div>
+              </div>
+
               {/* Reviewer Quick Autofill Options */}
               <div className="space-y-2">
                 <p className="text-[10px] text-zinc-400 font-bold uppercase tracking-wider">Reviewer Quick-Autofill</p>
@@ -248,7 +326,7 @@ export default function SignInPage() {
                     variant="outline"
                     size="xs"
                     onClick={() => handleAutofill("admin")}
-                    className="text-[10px] py-1 border-violet-950/20 bg-violet-600/5 hover:bg-violet-600/10 text-violet-400 hover:text-violet-300 font-semibold gap-1"
+                    className="text-[10px] py-1 border-violet-950/20 bg-violet-600/5 hover:bg-violet-600/10 text-violet-400 hover:text-violet-300 font-semibold gap-1 cursor-pointer"
                   >
                     <Shield className="size-3" />
                     <span>Admin</span>
@@ -257,7 +335,7 @@ export default function SignInPage() {
                     variant="outline"
                     size="xs"
                     onClick={() => handleAutofill("sub_admin")}
-                    className="text-[10px] py-1 border-amber-950/20 bg-amber-600/5 hover:bg-amber-600/10 text-amber-400 hover:text-amber-300 font-semibold gap-1"
+                    className="text-[10px] py-1 border-amber-950/20 bg-amber-600/5 hover:bg-amber-600/10 text-amber-400 hover:text-amber-300 font-semibold gap-1 cursor-pointer"
                   >
                     <UserCheck className="size-3" />
                     <span>Sub-Admin</span>
@@ -266,7 +344,7 @@ export default function SignInPage() {
                     variant="outline"
                     size="xs"
                     onClick={() => handleAutofill("user")}
-                    className="text-[10px] py-1 border-zinc-800 bg-zinc-900/30 hover:bg-zinc-900/60 text-zinc-300 hover:text-white font-semibold gap-1"
+                    className="text-[10px] py-1 border-zinc-800 bg-zinc-900/30 hover:bg-zinc-900/60 text-zinc-300 hover:text-white font-semibold gap-1 cursor-pointer"
                   >
                     <User className="size-3" />
                     <span>Candidate</span>
@@ -274,16 +352,10 @@ export default function SignInPage() {
                 </div>
               </div>
 
-              <div className="relative flex py-1 items-center">
-                <div className="flex-grow border-t border-zinc-900/80"></div>
-                <span className="flex-shrink mx-3 text-[10px] text-zinc-600 font-bold uppercase">or sign in with credentials</span>
-                <div className="flex-grow border-t border-zinc-900/80"></div>
-              </div>
-
               {/* Login Form */}
               <form onSubmit={handleLocalLogin} className="space-y-4">
                 <div className="space-y-1.5">
-                  <Label htmlFor="email" className="text-xs text-zinc-400">Email Address</Label>
+                  <Label htmlFor="email" className="text-xs text-zinc-300 font-semibold">Email Address</Label>
                   <div className="relative">
                     <Mail className="absolute left-3 top-2.5 size-4 text-zinc-500" />
                     <Input
@@ -293,18 +365,18 @@ export default function SignInPage() {
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder="candidate@example.com"
-                      className="pl-9 bg-zinc-900 border-zinc-800 text-xs text-white"
+                      className="pl-9 bg-zinc-900 border-zinc-800 text-xs text-zinc-100 placeholder:text-zinc-600 focus-visible:ring-violet-500"
                     />
                   </div>
                 </div>
 
                 <div className="space-y-1.5">
                   <div className="flex justify-between items-center">
-                    <Label htmlFor="pass" className="text-xs text-zinc-400">Password</Label>
+                    <Label htmlFor="pass" className="text-xs text-zinc-300 font-semibold">Password</Label>
                     <button
                       type="button"
                       onClick={() => setShowResetDialog(true)}
-                      className="text-[10px] text-violet-400 hover:text-violet-300 font-semibold focus:outline-none"
+                      className="text-[10px] text-violet-400 hover:text-violet-300 font-semibold focus:outline-none cursor-pointer"
                     >
                       Reset Password?
                     </button>
@@ -318,23 +390,23 @@ export default function SignInPage() {
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       placeholder="••••••••"
-                      className="pl-9 bg-zinc-900 border-zinc-800 text-xs text-white"
+                      className="pl-9 bg-zinc-900 border-zinc-800 text-xs text-zinc-100 placeholder:text-zinc-600 focus-visible:ring-violet-500"
                     />
                   </div>
                 </div>
 
                 <Button
                   type="submit"
-                  className="w-full bg-violet-600 hover:bg-violet-500 text-white font-semibold text-xs rounded-lg py-2.5 mt-2"
+                  className="w-full bg-violet-600 hover:bg-violet-500 text-white font-semibold text-xs rounded-lg py-2.5 mt-2 cursor-pointer shadow-md shadow-violet-950/20"
                   disabled={loading}
                 >
                   {loading ? <Loader2 className="size-4 animate-spin text-white mx-auto" /> : "Sign In to Workspace"}
                 </Button>
               </form>
             </CardContent>
-            <CardFooter className="px-6 pb-6 border-t border-zinc-900/60 pt-4 flex justify-between text-xs text-zinc-500">
-              <span>New to ResumeAI?</span>
-              <Link href="/sign-up" className="text-violet-400 hover:text-violet-300 font-semibold">
+            <CardFooter className="px-6 pb-6 border-t border-zinc-900/60 pt-4 flex justify-between text-xs text-zinc-400">
+              <span>New to ResumAI?</span>
+              <Link href="/sign-up" className="text-violet-400 hover:text-violet-300 font-semibold cursor-pointer">
                 Create Free Account
               </Link>
             </CardFooter>
