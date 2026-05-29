@@ -3,9 +3,11 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 const isPublicRoute = createRouteMatcher([
+  "/",
   "/sign-in(.*)",
   "/sign-up(.*)",
   "/api/auth(.*)",
+  "/share(.*)",
 ]);
 
 /**
@@ -20,8 +22,10 @@ export default function middleware(req: NextRequest) {
     const { pathname } = req.nextUrl;
 
     // Define public routes
-    const isPublic = pathname === "/sign-in" || 
+    const isPublic = pathname === "/" ||
+                     pathname === "/sign-in" || 
                      pathname === "/sign-up" || 
+                     pathname.startsWith("/share") ||
                      pathname.startsWith("/api/auth") ||
                      pathname.startsWith("/_next") ||
                      pathname.includes(".");
