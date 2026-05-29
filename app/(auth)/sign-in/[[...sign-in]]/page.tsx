@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
-import { Loader2, KeyRound, Mail, Sparkles, LogIn, Key, UserCheck, Shield, User } from "lucide-react";
+import { Loader2, KeyRound, Mail, Sparkles, LogIn, Key, UserCheck, Shield, User, ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
 import Link from "next/link";
 
@@ -163,6 +163,15 @@ export default function SignInPage() {
         {/* Glowing cyber grid pattern in background */}
         <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none" />
         <div className="absolute top-1/4 left-1/4 size-96 rounded-full bg-violet-500/10 blur-3xl" />
+        {/* Back to Home */}
+        <div className="absolute top-6 left-6 z-20">
+          <Link href="/" passHref>
+            <Button variant="ghost" size="sm" className="text-zinc-400 hover:text-zinc-200 gap-1.5 hover:bg-zinc-900 border border-transparent hover:border-zinc-800/60 rounded-xl transition-all cursor-pointer">
+              <ArrowLeft className="size-4" />
+              <span>Back to Home</span>
+            </Button>
+          </Link>
+        </div>
         <div className="w-full max-w-md p-4 z-10">
           <SignIn
             appearance={{
@@ -189,6 +198,15 @@ export default function SignInPage() {
       <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none" />
       <div className="absolute top-1/4 left-1/4 size-96 rounded-full bg-violet-600/10 blur-[100px] pointer-events-none" />
       <div className="absolute bottom-1/4 right-1/4 size-96 rounded-full bg-indigo-650/10 blur-[100px] pointer-events-none" />
+      {/* Back to Home */}
+      <div className="absolute top-6 left-6 z-20">
+        <Link href="/" passHref>
+          <Button variant="ghost" size="sm" className="text-zinc-400 hover:text-zinc-200 gap-1.5 hover:bg-zinc-900/60 border border-transparent hover:border-zinc-850/60 rounded-xl transition-all cursor-pointer">
+            <ArrowLeft className="size-4" />
+            <span>Back to Home</span>
+          </Button>
+        </Link>
+      </div>
 
       <div className="w-full max-w-md z-10 space-y-6">
         
