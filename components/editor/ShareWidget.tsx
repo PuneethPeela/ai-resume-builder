@@ -70,16 +70,18 @@ export function ShareWidget() {
 
   return (
     <Popover>
-      <PopoverTrigger asChild>
-        <Button
-          type="button"
-          variant="outline"
-          size="xs"
-          className="text-xs text-zinc-400 hover:text-zinc-200 border-zinc-900 bg-zinc-950 gap-1.5 h-8 font-sans font-medium"
-        >
-          <Share2 className="size-3.5" />
-          <span>Share</span>
-        </Button>
+      <PopoverTrigger
+        render={
+          <Button
+            type="button"
+            variant="outline"
+            size="xs"
+            className="text-xs text-zinc-400 hover:text-zinc-200 border-zinc-900 bg-zinc-950 gap-1.5 h-8 font-sans font-medium"
+          />
+        }
+      >
+        <Share2 className="size-3.5" />
+        <span>Share</span>
       </PopoverTrigger>
       <PopoverContent className="w-80 bg-zinc-950 border border-zinc-900 shadow-2xl p-4 text-zinc-100 flex flex-col gap-4 rounded-xl isolate">
         <PopoverHeader className="flex flex-col gap-1 pb-1">

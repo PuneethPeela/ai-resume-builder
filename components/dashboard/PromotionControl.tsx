@@ -197,14 +197,16 @@ export function PromotionControl() {
           {/* Standard user requesting promotion */}
           {isUser && !profile.promotionRequested && (
             <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-              <DialogTrigger asChild>
-                <Button 
-                  size="sm"
-                  className="bg-violet-600 hover:bg-violet-500 text-white font-medium text-xs rounded-lg h-8 gap-1"
-                >
-                  <Shield className="size-3.5" />
-                  Request Sub-Admin Role
-                </Button>
+              <DialogTrigger
+                render={
+                  <Button 
+                    size="sm"
+                    className="bg-violet-600 hover:bg-violet-500 text-white font-medium text-xs rounded-lg h-8 gap-1"
+                  />
+                }
+              >
+                <Shield className="size-3.5" />
+                Request Sub-Admin Role
               </DialogTrigger>
               <DialogContent className="glass border-zinc-900 bg-zinc-950/90 backdrop-blur-2xl text-zinc-150 font-sans max-w-sm">
                 <DialogHeader className="space-y-2">
