@@ -88,6 +88,6 @@ export async function POST(req: NextRequest) {
     });
   } catch (error: any) {
     console.error("Login API Error:", error);
-    return NextResponse.json({ success: false, error: "Login failed" }, { status: 500 });
+    return NextResponse.json({ success: false, error: error.message || "Login failed" }, { status: 500 });
   }
 }

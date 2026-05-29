@@ -67,6 +67,6 @@ export async function POST(req: NextRequest) {
     });
   } catch (error: any) {
     console.error("Register API Error:", error);
-    return NextResponse.json({ success: false, error: "Registration failed" }, { status: 500 });
+    return NextResponse.json({ success: false, error: error.message || "Registration failed" }, { status: 500 });
   }
 }
