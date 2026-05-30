@@ -234,6 +234,7 @@ export default function ResourcesPage() {
 
   useEffect(() => {
     fetchResumesAndData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Calculate local skill matching
