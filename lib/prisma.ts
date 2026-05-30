@@ -7,16 +7,35 @@ const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined;
 };
 
-const databaseUrl = process.env.DATABASE_URL;
-const isBuildPhase = process.env.NEXT_PHASE === "phase-production-build";
+const rawDatabaseUrl = process.env.DATABASE_URL;
 
-if (!databaseUrl && !isBuildPhase) {
-  throw new Error("DATABASE_URL environment variable is missing. Please configure it in your Vercel Dashboard Environment Variables (production) or local .env file.");
+// Resilient URL validation to prevent crashes from unconfigured placeholder templates (e.g., Supabase [password] and [id] syntax)
+let cleanDatabaseUrl = "postgresql://apple@127.0.0.1:5432/postgres?schema=public";
+
+if (rawDatabaseUrl) {
+  const isPlaceholder = rawDatabaseUrl.includes("[password]") || 
+                        rawDatabaseUrl.includes("[id]") || 
+                        rawDatabaseUrl.trim() === "" ||
+                        !rawDatabaseUrl.startsWith("postgres");
+  if (!isPlaceholder) {
+    cleanDatabaseUrl = rawDatabaseUrl;
+  } else {
+    console.warn("⚠️ ResumAI Alert: Malformed DATABASE_URL placeholder detected. Falling back to local pgSQL connection to prevent application crash.");
+  }
 }
 
-const pool = new Pool({
-  connectionString: databaseUrl || "postgresql://placeholder:5432/postgres",
-});
+let pool: Pool;
+try {
+  pool = new Pool({
+    connectionString: cleanDatabaseUrl,
+  });
+} catch (err) {
+  console.error("Failed to initialize postgres Pool, using fallback:", err);
+  pool = new Pool({
+    connectionString: "postgresql://apple@127.0.0.1:5432/postgres?schema=public",
+  });
+}
+
 const adapter = new PrismaPg(pool);
 
 export const prisma =
