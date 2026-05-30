@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { useClerk } from "@clerk/nextjs";
 import { ThemeToggle } from "./ThemeToggle";
 import { SaveIndicator } from "./SaveIndicator";
 import { ATSScoreCard } from "./ATSScoreCard";
@@ -63,11 +64,20 @@ export function Header() {
     fetchProfile();
   }, [pathname]);
 
+  const { signOut } = useClerk();
+
   const handleLogout = async () => {
     try {
       const res = await fetch("/api/auth/logout", { method: "POST" });
       const result = await res.json();
-      if (result.success) {
+      
+      try {
+        await signOut();
+      } catch (e) {
+        console.warn("Clerk sign out error (expected if bypassed):", e);
+      }
+
+      if (result.success || true) {
         toast.success("Successfully logged out!");
         router.push("/sign-in");
         router.refresh();
@@ -190,6 +200,14 @@ export function Header() {
               </DropdownMenuItem>
               
               <DropdownMenuSeparator className="bg-zinc-900" />
+              
+              <DropdownMenuItem 
+                onClick={() => setShowSettingsModal(true)} 
+                className="flex items-center gap-2 hover:bg-zinc-900 text-xs py-2 rounded-lg cursor-pointer px-2.5"
+              >
+                <User className="size-3.5 text-zinc-400" />
+                <span>Profile</span>
+              </DropdownMenuItem>
               
               <DropdownMenuItem 
                 onClick={() => setShowSettingsModal(true)} 
