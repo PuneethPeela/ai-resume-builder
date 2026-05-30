@@ -49,16 +49,16 @@ This project was built as a full-stack internship selection assignment showcasin
 
 ```mermaid
 graph TD
-    A[Next.js 14 Client App Router] -->|State Management| B(Zustand Store + Persist)
-    A -->|Authentication| C[Clerk OAuth]
+    A["Next.js Client (App Router)"] -->|State Management| B["Zustand Store + Persist"]
+    A -->|Authentication| C["Clerk OAuth"]
     A -->|Local PDF Compilation| D["@react-pdf/renderer"]
     
-    A -->|API Requests| E[Next.js Server API Routes]
-    E -->|Database Operations| F[Prisma ORM Client]
-    E -->|Rate Limiting| G[Upstash Redis Limiter]
-    E -->|AI Computations| H[Google Gemini AI 1.5 Flash]
+    A -->|API Requests| E["Next.js Server API Routes"]
+    E -->|Database Operations| F["Prisma ORM Client"]
+    E -->|Rate Limiting| G["Upstash Redis Limiter"]
+    E -->|AI Computations| H["Google Gemini AI (1.5 Flash)"]
     
-    F -->|Data Storage| I[(Supabase PostgreSQL)]
+    F -->|Data Storage| I["Supabase PostgreSQL Database"]
 ```
 
 *   **Framework:** Next.js 14 (App Router)
