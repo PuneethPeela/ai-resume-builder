@@ -6,6 +6,7 @@ import { SignIn } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Badge } from "@/components/ui/badge";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 import { Loader2, KeyRound, Mail, Sparkles, LogIn, Key, UserCheck, Shield, User, ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
@@ -16,6 +17,11 @@ export default function SignInPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+
+  // New state variables for Demo and Admin passcode logins
+  const [adminPasscode, setAdminPasscode] = useState("");
+  const [adminLoading, setAdminLoading] = useState(false);
+  const [demoLoading, setDemoLoading] = useState(false);
 
   // Password reset dialog states
   const [showResetDialog, setShowResetDialog] = useState(false);
@@ -154,6 +160,94 @@ export default function SignInPage() {
       toast.error("Reviewer autofill sequence failed");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleOneClickDemoLogin = async () => {
+    setDemoLoading(true);
+    const targetEmail = "demo@resumeai.com";
+    const targetName = "Demo Candidate";
+    const targetPass = "demo123";
+    const role = "user";
+
+    try {
+      // Seed account if missing
+      await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: targetEmail, password: targetPass, name: targetName, role }),
+      });
+    } catch (err) {
+      // User may already be registered
+    }
+
+    try {
+      // Login
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: targetEmail, password: targetPass }),
+      });
+      const result = await res.json();
+
+      if (result.success) {
+        toast.success(`Welcome back, Demo Candidate!`);
+        router.push("/dashboard");
+        router.refresh();
+      } else {
+        toast.error(result.error || "Demo login failed");
+      }
+    } catch (err) {
+      toast.error("Demo login sequence failed");
+    } finally {
+      setDemoLoading(false);
+    }
+  };
+
+  const handleAdminSecretLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (adminPasscode.trim() !== "abc123") {
+      toast.error("Invalid Evaluator Passcode. Please try again.");
+      return;
+    }
+
+    setAdminLoading(true);
+    const targetEmail = "admin@resumeai.com";
+    const targetName = "Super Admin";
+    const targetPass = "admin123";
+    const role = "admin";
+
+    try {
+      // Seed account if missing
+      await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: targetEmail, password: targetPass, name: targetName, role }),
+      });
+    } catch (err) {
+      // User may already be registered
+    }
+
+    try {
+      // Login
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: targetEmail, password: targetPass }),
+      });
+      const result = await res.json();
+
+      if (result.success) {
+        toast.success("Evaluator Admin Panel Access Granted!");
+        router.push("/admin");
+        router.refresh();
+      } else {
+        toast.error(result.error || "Admin authentication failed");
+      }
+    } catch (err) {
+      toast.error("Admin login sequence failed");
+    } finally {
+      setAdminLoading(false);
     }
   };
 
@@ -426,6 +520,104 @@ export default function SignInPage() {
             </CardFooter>
           </Card>
         )}
+
+        {/* One-Click Sample Candidate Login Card */}
+        <Card className="glass border-zinc-850 shadow-2xl relative overflow-hidden group">
+          <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-violet-500/50 to-transparent" />
+          <CardHeader className="p-5">
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-sm font-bold text-zinc-50 flex items-center gap-2">
+                <UserCheck className="size-4 text-violet-400" />
+                <span>One-Click Sample Candidate Login</span>
+              </CardTitle>
+              <Badge variant="secondary" className="bg-violet-950/40 text-violet-400 border-violet-900/50 text-[10px] px-2 py-0.5 font-bold">
+                Quick Access
+              </Badge>
+            </div>
+            <CardDescription className="text-[11px] text-zinc-400 mt-1">
+              Access a pre-loaded candidate sandbox with sample resumes and interactive stats.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="px-5 pb-5 space-y-3">
+            <div className="bg-zinc-950/65 rounded-lg border border-zinc-900 p-3 flex flex-col gap-1 text-[11px]">
+              <div className="flex justify-between items-center text-zinc-455">
+                <span className="text-zinc-400">Email:</span>
+                <code className="text-violet-300 font-mono">demo@resumeai.com</code>
+              </div>
+              <div className="flex justify-between items-center text-zinc-455">
+                <span className="text-zinc-400">Password:</span>
+                <code className="text-violet-300 font-mono">demo123</code>
+              </div>
+            </div>
+            <Button
+              type="button"
+              onClick={handleOneClickDemoLogin}
+              disabled={demoLoading}
+              className="w-full bg-gradient-to-r from-violet-650 to-indigo-650 hover:from-violet-600 hover:to-indigo-600 text-white font-semibold text-xs rounded-lg py-2 flex items-center justify-center gap-2 shadow-md shadow-violet-950/20 cursor-pointer border border-violet-850"
+            >
+              {demoLoading ? (
+                <Loader2 className="size-3.5 animate-spin" />
+              ) : (
+                <>
+                  <Sparkles className="size-3.5" />
+                  <span>Launch Candidate Dashboard</span>
+                </>
+              )}
+            </Button>
+          </CardContent>
+        </Card>
+
+        {/* Evaluator Admin Portal Card */}
+        <Card className="glass border-zinc-850 shadow-2xl relative overflow-hidden group">
+          <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-amber-500/50 to-transparent" />
+          <CardHeader className="p-5">
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-sm font-bold text-zinc-50 flex items-center gap-2">
+                <Shield className="size-4 text-amber-400" />
+                <span>Evaluator Admin Portal</span>
+              </CardTitle>
+              <Badge variant="secondary" className="bg-amber-950/40 text-amber-400 border-amber-900/50 text-[10px] px-2 py-0.5 font-bold">
+                Admin Gate
+              </Badge>
+            </div>
+            <CardDescription className="text-[11px] text-zinc-400 mt-1">
+              Unlock the full Admin Console with passcode (secret key: <code className="text-amber-300 font-mono">abc123</code>) to moderate roles and requests.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="px-5 pb-5">
+            <form onSubmit={handleAdminSecretLogin} className="space-y-3">
+              <div className="space-y-1.5">
+                <Label htmlFor="passcode" className="text-[10px] text-zinc-400 font-bold uppercase tracking-wider">Secret Admin Passcode</Label>
+                <div className="relative">
+                  <Key className="absolute left-3 top-2.5 size-4 text-zinc-500" />
+                  <Input
+                    id="passcode"
+                    type="password"
+                    required
+                    value={adminPasscode}
+                    onChange={(e) => setAdminPasscode(e.target.value)}
+                    placeholder="Enter passcode (e.g. abc123)"
+                    className="pl-9 bg-zinc-900 border-zinc-800 text-xs text-zinc-100 placeholder:text-zinc-600 focus-visible:ring-amber-500"
+                  />
+                </div>
+              </div>
+              <Button
+                type="submit"
+                disabled={adminLoading}
+                className="w-full bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-550 hover:to-amber-650 text-white font-semibold text-xs rounded-lg py-2 flex items-center justify-center gap-2 shadow-md shadow-amber-950/20 cursor-pointer border border-amber-950/30"
+              >
+                {adminLoading ? (
+                  <Loader2 className="size-3.5 animate-spin" />
+                ) : (
+                  <>
+                    <LogIn className="size-3.5" />
+                    <span>Access Admin Panel</span>
+                  </>
+                )}
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

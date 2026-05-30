@@ -5,7 +5,6 @@ import { useParams, useRouter } from "next/navigation";
 import { useResumeStore } from "@/stores/resumeStore";
 import { ResumeForm } from "@/components/editor/ResumeForm";
 import { LivePreview } from "@/components/editor/LivePreview";
-import { ChatAssistant } from "@/components/chat/ChatAssistant";
 import { Loader2, AlertCircle, FileText, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -137,9 +136,6 @@ export default function ResumeEditorPage() {
       <section className="w-full md:w-[55%] h-full p-4 md:p-6 bg-zinc-900/10">
         <LivePreview />
       </section>
-
-      {/* Floating Chatbot Assistant */}
-      <ChatAssistant />
     </main>
   );
 }
