@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
-import { Plus, Trash2, Calendar, MapPin, Briefcase } from "lucide-react";
+import { Plus, Trash2, Calendar, MapPin, Briefcase, Sparkles } from "lucide-react";
 import { AIBulletButton } from "./AIBulletButton";
 
 export function ExperienceSection() {
@@ -24,9 +24,15 @@ export function ExperienceSection() {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <div>
-          <h3 className="text-sm font-semibold text-zinc-200">Work Experience</h3>
-          <p className="text-xs text-zinc-500">Add details about your professional career history.</p>
+        <div className="flex items-center gap-3">
+          <div>
+            <h3 className="text-sm font-semibold text-zinc-200">Work Experience</h3>
+            <p className="text-xs text-zinc-500">Add details about your professional career history.</p>
+          </div>
+          <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 bg-violet-600/10 border border-violet-500/20 rounded-full cursor-help group shadow-sm shadow-violet-900/10">
+            <Sparkles className="size-3 text-violet-400 group-hover:animate-pulse" />
+            <span className="text-[10px] font-bold text-violet-300 tracking-wide uppercase">Stitch - Design with AI</span>
+          </div>
         </div>
         <Button
           type="button"

@@ -38,7 +38,7 @@ export function ResumeGrid() {
         {Array.from({ length: 4 }).map((_, idx) => (
           <div
             key={idx}
-            className="h-48 rounded-2xl border border-zinc-900 bg-zinc-950/20 p-5 flex flex-col justify-between"
+            className="h-64 rounded-2xl border border-zinc-900 bg-zinc-950/20 p-5 flex flex-col justify-between"
           >
             <div className="space-y-3">
               <Skeleton className="size-10 rounded-xl" />
@@ -57,18 +57,15 @@ export function ResumeGrid() {
   return (
     <div className="space-y-4">
       {resumes.length > 0 && (
-        <div className="flex justify-between items-center">
-          <p className="text-xs text-zinc-500 font-semibold uppercase tracking-wider">
-            Your Workspace ({resumes.length})
-          </p>
+        <div className="flex justify-end mb-2">
           <Button
             variant="ghost"
-            size="xs"
+            size="sm"
             onClick={fetchResumes}
-            className="text-[10px] text-zinc-500 hover:text-zinc-300 gap-1"
+            className="text-xs text-zinc-500 hover:text-zinc-300 gap-1.5 h-8"
           >
-            <RefreshCw className="size-3" />
-            <span>Reload</span>
+            <RefreshCw className="size-3.5" />
+            <span>Sync</span>
           </Button>
         </div>
       )}

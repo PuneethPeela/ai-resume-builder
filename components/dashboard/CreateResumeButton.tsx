@@ -45,22 +45,22 @@ export function CreateResumeButton() {
       type="button"
       disabled={creating}
       onClick={handleCreate}
-      className="group relative h-48 rounded-2xl border-2 border-dashed border-zinc-800 hover:border-violet-500/50 bg-zinc-950/20 hover:bg-violet-500/5 flex flex-col items-center justify-center gap-3 p-6 transition-all duration-300 shadow-inner cursor-pointer"
+      className="group relative h-64 rounded-2xl border-2 border-dotted border-zinc-700 hover:border-violet-500 bg-zinc-950/40 hover:bg-violet-500/5 flex flex-col items-center justify-center gap-4 p-6 transition-all duration-300 cursor-pointer backdrop-blur-md"
     >
-      <div className="size-12 rounded-xl bg-zinc-900 border border-zinc-800 group-hover:border-violet-500/30 flex items-center justify-center text-zinc-400 group-hover:text-violet-400 group-hover:scale-105 transition-all duration-300">
+      <div className="size-16 rounded-full bg-zinc-900 border border-zinc-800 group-hover:border-violet-500/50 flex items-center justify-center text-zinc-400 group-hover:text-violet-400 group-hover:scale-110 transition-all duration-300 shadow-sm">
         {creating ? (
-          <Loader2 className="size-5 animate-spin text-violet-400" />
+          <Loader2 className="size-8 animate-spin text-violet-400" />
         ) : (
-          <Plus className="size-5" />
+          <Plus className="size-8" />
         )}
       </div>
       
-      <div className="text-center">
-        <p className="font-semibold text-sm text-zinc-300 group-hover:text-zinc-200">
+      <div className="text-center space-y-1">
+        <p className="font-semibold text-sm text-zinc-300 group-hover:text-violet-300">
           Create New Resume
         </p>
-        <p className="text-xs text-zinc-500 mt-1">
-          Start building from a blank slate
+        <p className="text-xs text-zinc-500">
+          Start from a blank slate
         </p>
       </div>
     </button>

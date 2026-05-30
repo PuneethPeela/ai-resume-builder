@@ -18,10 +18,15 @@ import {
   GraduationCap, 
   Github, 
   User,
-  Settings
+  Settings,
+  Bell,
+  Search,
+  Menu,
+  Bot
 } from "lucide-react";
 import { SettingsModal } from "./SettingsModal";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { 
   DropdownMenu, 
   DropdownMenuContent, 
@@ -31,6 +36,7 @@ import {
   DropdownMenuTrigger 
 } from "@/components/ui/dropdown-menu";
 import { toast } from "sonner";
+import { useResumeStore } from "@/stores/resumeStore";
 
 interface UserProfile {
   name: string | null;
@@ -41,7 +47,9 @@ interface UserProfile {
 export function Header() {
   const pathname = usePathname();
   const router = useRouter();
-  const isEditor = pathname.includes("/dashboard/") && pathname !== "/dashboard";
+  const isEditor = pathname.includes("/dashboard/") && pathname !== "/dashboard" && !pathname.includes("/assistant") && !pathname.includes("/settings") && !pathname.includes("/export");
+  const isAssistant = pathname.includes("/assistant");
+  const isExport = pathname.includes("/export");
   
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [showSettingsModal, setShowSettingsModal] = useState(false);
@@ -65,6 +73,8 @@ export function Header() {
   }, [pathname]);
 
   const { signOut } = useClerk();
+  
+  const resumeData = useResumeStore(state => state.resumeData);
 
   const handleLogout = async () => {
     try {
@@ -90,75 +100,72 @@ export function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-zinc-900 bg-zinc-950/70 backdrop-blur-md px-4 sm:px-6 h-14 flex items-center justify-between font-sans">
-      {/* Brand logo / Back Button */}
-      <div className="flex items-center gap-3">
+    <header className="sticky top-0 z-40 w-full border-b border-zinc-900 bg-zinc-950/70 backdrop-blur-md px-4 sm:px-6 h-14 flex items-center justify-between font-sans shrink-0">
+      
+      {/* Mobile Menu Toggle (Visible only on small screens) */}
+      <div className="md:hidden flex items-center gap-3">
+        <Button variant="ghost" size="icon" className="text-zinc-400">
+          <Menu className="size-5" />
+        </Button>
+      </div>
+
+      {/* Left side context (Search on Dashboard, Document Title on Editor) */}
+      <div className="hidden md:flex flex-1 items-center gap-3">
         {isEditor ? (
-          <Link href="/dashboard" passHref>
-            <Button
-              variant="outline"
-              size="xs"
-              className="text-xs text-zinc-400 hover:text-zinc-200 border-zinc-900 bg-zinc-950 gap-1 cursor-pointer"
-            >
-              <ArrowLeft className="size-3.5" />
-              <span>Dashboard</span>
-            </Button>
-          </Link>
-        ) : (
-          <Link href="/" className="flex items-center gap-1.5 group select-none">
-            <div className="size-7 rounded-lg bg-gradient-to-tr from-violet-600 to-indigo-600 flex items-center justify-center text-white shadow-md shadow-violet-900/20 group-hover:scale-105 transition-transform duration-200">
-              <Sparkles className="size-4 animate-pulse text-white" />
+          <div className="flex items-center gap-4">
+            <SaveIndicator />
+            <div className="flex items-center gap-2 group cursor-text px-2 py-1 hover:bg-zinc-900 rounded-md transition-colors">
+              <span className="font-semibold text-sm text-zinc-100">{resumeData.personalInfo.firstName ? `${resumeData.personalInfo.firstName}'s Resume` : "Untitled Resume"}</span>
+              <Settings className="size-3 text-zinc-500 opacity-0 group-hover:opacity-100 transition-opacity" />
             </div>
-            <span className="font-bold text-base tracking-tight bg-gradient-to-r from-white via-zinc-200 to-zinc-400 bg-clip-text text-transparent">
-              ResumAI
-            </span>
-          </Link>
+          </div>
+        ) : isAssistant ? (
+          <div className="flex items-center gap-2 px-2">
+            <BotIcon />
+            <span className="font-semibold text-sm text-zinc-100">Nexus AI</span>
+          </div>
+        ) : (
+          <div className="relative w-full max-w-sm">
+            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-4 text-zinc-500" />
+            <Input 
+              placeholder="Search templates, tips..." 
+              className="w-full h-8 bg-zinc-900/50 border-zinc-800 text-xs pl-9 focus-visible:ring-violet-500/50"
+            />
+          </div>
         )}
       </div>
 
-      {/* Center Toolbar (Only on Editor page) */}
-      {isEditor && (
-        <div className="hidden md:flex items-center gap-3">
-          <SaveIndicator />
-        </div>
-      )}
-
       {/* Right side controls */}
-      <div className="flex items-center gap-3">
-        {/* Editor controls */}
+      <div className="flex items-center gap-2 sm:gap-4 ml-auto">
+        
+        {/* Specific Editor actions */}
         {isEditor && (
-          <div className="flex items-center gap-2 mr-1">
-            <ATSScoreCard />
-            <CoverLetterModal />
-            <ShareWidget />
-            <PDFPreviewModal />
+          <div className="flex items-center gap-2 mr-2">
+            <Button variant="ghost" size="xs" className="text-xs text-zinc-400 hover:text-zinc-100 gap-1.5 h-8">
+              <Search className="size-3.5" />
+            </Button>
+            <Link href={`/dashboard/${useResumeStore.getState().resumeId}/export`}>
+              <Button size="xs" className="text-xs bg-violet-600 hover:bg-violet-500 text-white shadow-sm h-8">
+                Export PDF
+              </Button>
+            </Link>
           </div>
         )}
 
-        {/* Standard controls */}
-        {!isEditor && pathname !== "/" && (
-          <Link href="/dashboard" passHref>
-            <Button
-              variant="ghost"
-              size="xs"
-              className="text-xs text-zinc-400 hover:text-zinc-200 gap-1.5 cursor-pointer"
-            >
-              <LayoutDashboard className="size-3.5" />
-              <span>Console</span>
-            </Button>
-          </Link>
-        )}
+        <Button variant="ghost" size="icon" className="size-8 text-zinc-400 hover:text-zinc-100 rounded-full">
+          <Bell className="size-4" />
+        </Button>
 
         <ThemeToggle />
 
         {profile && (
           <DropdownMenu>
-            <DropdownMenuTrigger className="outline-hidden cursor-pointer select-none">
-              <div className="size-8 rounded-full bg-gradient-to-tr from-violet-600 to-indigo-600 flex items-center justify-center text-white font-bold text-xs shadow-md shadow-violet-950/40 border border-violet-500/30 glow-violet hover:scale-105 transition-transform duration-200 uppercase">
+            <DropdownMenuTrigger className="outline-hidden cursor-pointer select-none ml-1">
+              <div className="size-7 rounded-full bg-gradient-to-tr from-violet-600 to-indigo-600 flex items-center justify-center text-white font-bold text-[10px] shadow-sm shadow-violet-950/40 border border-violet-500/30 hover:scale-105 transition-transform duration-200 uppercase">
                 {profile.name ? profile.name.slice(0, 2) : "US"}
               </div>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-56 bg-zinc-950/95 border border-zinc-900 shadow-2xl rounded-xl p-1.5 text-zinc-300 isolate">
+            <DropdownMenuContent className="w-56 bg-zinc-950/95 border border-zinc-900 shadow-2xl rounded-xl p-1.5 text-zinc-300 isolate" align="end">
               <DropdownMenuLabel className="px-2.5 py-2">
                 <div className="flex flex-col gap-0.5">
                   <span className="text-xs font-bold text-zinc-100 truncate">{profile.name || "User"}</span>
@@ -176,33 +183,15 @@ export function Header() {
               </DropdownMenuItem>
               
               <DropdownMenuItem 
-                onClick={() => router.push("/dashboard")} 
+                onClick={() => router.push("/dashboard/assistant")} 
                 className="flex items-center gap-2 hover:bg-zinc-900 text-xs py-2 rounded-lg cursor-pointer px-2.5"
               >
-                <Sparkles className="size-3.5 text-violet-400" />
-                <span>AI Resume Builder</span>
+                <BotIcon />
+                <span>Nexus AI</span>
               </DropdownMenuItem>
               
               <DropdownMenuItem 
-                onClick={() => router.push("/dashboard/resources")} 
-                className="flex items-center gap-2 hover:bg-zinc-900 text-xs py-2 rounded-lg cursor-pointer px-2.5"
-              >
-                <GraduationCap className="size-3.5 text-emerald-400" />
-                <span>Student & Resources</span>
-              </DropdownMenuItem>
-              
-              <DropdownMenuItem 
-                onClick={() => window.open("https://github.com/PuneethPeela/ai-resume-builder", "_blank")} 
-                className="flex items-center gap-2 hover:bg-zinc-900 text-xs py-2 rounded-lg cursor-pointer px-2.5"
-              >
-                <Github className="size-3.5 text-zinc-400" />
-                <span>GitHub Repository</span>
-              </DropdownMenuItem>
-              
-              <DropdownMenuSeparator className="bg-zinc-900" />
-              
-              <DropdownMenuItem 
-                onClick={() => setShowSettingsModal(true)} 
+                onClick={() => router.push("/dashboard/settings")} 
                 className="flex items-center gap-2 hover:bg-zinc-900 text-xs py-2 rounded-lg cursor-pointer px-2.5"
               >
                 <User className="size-3.5 text-zinc-400" />
@@ -210,16 +199,8 @@ export function Header() {
               </DropdownMenuItem>
               
               <DropdownMenuItem 
-                onClick={() => setShowSettingsModal(true)} 
-                className="flex items-center gap-2 hover:bg-zinc-900 text-xs py-2 rounded-lg cursor-pointer px-2.5"
-              >
-                <Settings className="size-3.5 text-zinc-400" />
-                <span>Settings</span>
-              </DropdownMenuItem>
-              
-              <DropdownMenuItem 
                 onClick={handleLogout} 
-                className="flex items-center gap-2 hover:bg-red-500/10 text-red-400 hover:text-red-300 text-xs py-2 rounded-lg cursor-pointer px-2.5"
+                className="flex items-center gap-2 hover:bg-red-500/10 text-red-400 hover:text-red-300 text-xs py-2 rounded-lg cursor-pointer px-2.5 mt-1"
               >
                 <LogOut className="size-3.5" />
                 <span>Log Out</span>
@@ -239,4 +220,8 @@ export function Header() {
       )}
     </header>
   );
+}
+
+function BotIcon() {
+  return <Bot className="size-3.5 text-violet-400" />;
 }
