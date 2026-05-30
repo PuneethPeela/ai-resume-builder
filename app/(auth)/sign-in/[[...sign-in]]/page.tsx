@@ -23,6 +23,11 @@ export default function SignInPage() {
   const [adminLoading, setAdminLoading] = useState(false);
   const [demoLoading, setDemoLoading] = useState(false);
 
+  // Secure reveal passcode state variables
+  const [revealInput, setRevealInput] = useState("");
+  const [passcodeRevealed, setPasscodeRevealed] = useState(false);
+  const [showRevealField, setShowRevealField] = useState(false);
+
   // Password reset dialog states
   const [showResetDialog, setShowResetDialog] = useState(false);
   const [oldPassword, setOldPassword] = useState("");
@@ -581,10 +586,82 @@ export default function SignInPage() {
               </Badge>
             </div>
             <CardDescription className="text-[11px] text-zinc-400 mt-1">
-              Unlock the full Admin Console with passcode (secret key: <code className="text-amber-300 font-mono">abc123</code>) to moderate roles and requests.
+              Unlock the full Admin Console with passcode to moderate roles and requests.
             </CardDescription>
           </CardHeader>
-          <CardContent className="px-5 pb-5">
+          <CardContent className="px-5 pb-5 space-y-4">
+            
+            {/* Password-protected Secret Key Reveal Constructor */}
+            {passcodeRevealed ? (
+              <div className="bg-amber-500/5 border border-amber-500/20 rounded-xl p-3.5 flex items-center justify-between text-xs text-amber-300">
+                <div className="space-y-0.5">
+                  <span className="text-[10px] text-zinc-500 uppercase font-bold tracking-wider block">Admin Secret Key</span>
+                  <code className="text-xs font-bold font-mono tracking-wider text-amber-200">
+                    abc123
+                  </code>
+                </div>
+                <Badge className="bg-amber-500/10 text-amber-300 border-amber-500/20 text-[9px] uppercase font-extrabold">
+                  Revealed
+                </Badge>
+              </div>
+            ) : showRevealField ? (
+              <div className="space-y-2 bg-zinc-950/65 border border-zinc-900 p-3.5 rounded-xl">
+                <div className="flex justify-between items-center text-[10px] text-zinc-500 uppercase font-bold tracking-wider">
+                  <span>Enter reveal password:</span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowRevealField(false);
+                      setRevealInput("");
+                    }}
+                    className="text-zinc-400 hover:text-zinc-200 font-semibold cursor-pointer"
+                  >
+                    Cancel
+                  </button>
+                </div>
+                <div className="flex gap-2">
+                  <Input
+                    type="password"
+                    value={revealInput}
+                    onChange={(e) => {
+                      setRevealInput(e.target.value);
+                      if (e.target.value.trim() === "2006") {
+                        setPasscodeRevealed(true);
+                        toast.success("Security passcode revealed: abc123");
+                      }
+                    }}
+                    placeholder="Hint: Type '2006' here..."
+                    className="bg-zinc-900 border-zinc-800 text-xs h-9 text-zinc-100 placeholder:text-zinc-650 focus-visible:ring-amber-500"
+                  />
+                  <Button
+                    type="button"
+                    onClick={() => {
+                      if (revealInput.trim() === "2006") {
+                        setPasscodeRevealed(true);
+                        toast.success("Security passcode revealed: abc123");
+                      } else {
+                        toast.error("Incorrect reveal password! Hint: 2006");
+                      }
+                    }}
+                    className="h-9 bg-amber-600 hover:bg-amber-500 text-white text-xs px-3 font-semibold shrink-0 cursor-pointer"
+                  >
+                    Reveal
+                  </Button>
+                </div>
+              </div>
+            ) : (
+              <div className="flex justify-end">
+                <button
+                  type="button"
+                  onClick={() => setShowRevealField(true)}
+                  className="text-[11px] text-amber-400 hover:text-amber-300 font-bold flex items-center gap-1.5 cursor-pointer focus:outline-none transition-colors border border-amber-950/40 bg-amber-500/5 hover:bg-amber-500/10 px-3 py-1.5 rounded-lg"
+                >
+                  <Key className="size-3.5 text-amber-400" />
+                  <span>Reveal Secret Passcode</span>
+                </button>
+              </div>
+            )}
+
             <form onSubmit={handleAdminSecretLogin} className="space-y-3">
               <div className="space-y-1.5">
                 <Label htmlFor="passcode" className="text-[10px] text-zinc-400 font-bold uppercase tracking-wider">Secret Admin Passcode</Label>
@@ -597,7 +674,7 @@ export default function SignInPage() {
                     value={adminPasscode}
                     onChange={(e) => setAdminPasscode(e.target.value)}
                     placeholder="Enter passcode (e.g. abc123)"
-                    className="pl-9 bg-zinc-900 border-zinc-800 text-xs text-zinc-100 placeholder:text-zinc-600 focus-visible:ring-amber-500"
+                    className="pl-9 bg-zinc-900 border-zinc-800 text-xs text-zinc-100 placeholder:text-zinc-650 focus-visible:ring-amber-500"
                   />
                 </div>
               </div>
