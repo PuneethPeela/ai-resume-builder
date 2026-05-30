@@ -627,10 +627,10 @@ export default function SignInPage() {
                       setRevealInput(e.target.value);
                       if (e.target.value.trim() === "2006") {
                         setPasscodeRevealed(true);
-                        toast.success("Security passcode revealed: abc123");
+                        toast.success("Security passcode revealed successfully!");
                       }
                     }}
-                    placeholder="Hint: Type '2006' here..."
+                    placeholder="Enter reveal password..."
                     className="bg-zinc-900 border-zinc-800 text-xs h-9 text-zinc-100 placeholder:text-zinc-650 focus-visible:ring-amber-500"
                   />
                   <Button
@@ -638,9 +638,9 @@ export default function SignInPage() {
                     onClick={() => {
                       if (revealInput.trim() === "2006") {
                         setPasscodeRevealed(true);
-                        toast.success("Security passcode revealed: abc123");
+                        toast.success("Security passcode revealed successfully!");
                       } else {
-                        toast.error("Incorrect reveal password! Hint: 2006");
+                        toast.error("Incorrect reveal password!");
                       }
                     }}
                     className="h-9 bg-amber-600 hover:bg-amber-500 text-white text-xs px-3 font-semibold shrink-0 cursor-pointer"
@@ -668,13 +668,13 @@ export default function SignInPage() {
                 <div className="relative">
                   <Key className="absolute left-3 top-2.5 size-4 text-zinc-500" />
                   <Input
-                    id="passcode"
-                    type="password"
-                    required
-                    value={adminPasscode}
-                    onChange={(e) => setAdminPasscode(e.target.value)}
-                    placeholder="Enter passcode (e.g. abc123)"
-                    className="pl-9 bg-zinc-900 border-zinc-800 text-xs text-zinc-100 placeholder:text-zinc-650 focus-visible:ring-amber-500"
+                     id="passcode"
+                     type="password"
+                     required
+                     value={adminPasscode}
+                     onChange={(e) => setAdminPasscode(e.target.value)}
+                     placeholder="Enter passcode..."
+                     className="pl-9 bg-zinc-900 border-zinc-800 text-xs text-zinc-100 placeholder:text-zinc-650 focus-visible:ring-amber-500"
                   />
                 </div>
               </div>

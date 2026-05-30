@@ -1,7 +1,6 @@
 "use client";
 
 import { Header } from "@/components/shared/Header";
-import { ChatAssistant } from "@/components/chat/ChatAssistant";
 
 export default function DashboardLayout({
   children,
@@ -14,7 +13,6 @@ export default function DashboardLayout({
       <div className="flex-1 w-full bg-zinc-950">
         {children}
       </div>
-      <ChatAssistant />
     </div>
   );
 }

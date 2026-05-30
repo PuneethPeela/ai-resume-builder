@@ -13,7 +13,18 @@ export function useChatbot() {
   // Load chat history from the database on mount/resumeId change
   useEffect(() => {
     const fetchChatHistory = async () => {
-      if (!resumeId) return;
+      if (!resumeId) {
+        // Default greeting fallback for guest users
+        setMessages([
+          {
+            id: "greeting",
+            role: "assistant",
+            content: "Hello! I am your AI Resume Copilot. I can review your details, suggest metrics, add action verbs, and help you customize your resume for target roles. Write in Telugu, Hindi, French, or Japanese and I will respond in kind! What section should we focus on?",
+            timestamp: new Date(),
+          },
+        ]);
+        return;
+      }
       try {
         const response = await fetch(`/api/ai/chat?resumeId=${resumeId}`);
         const result = await response.json();
