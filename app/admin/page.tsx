@@ -33,8 +33,14 @@ export default function AdminPanel() {
   const [newUserEmail, setNewUserEmail] = useState("");
   const [newUserName, setNewUserName] = useState("");
   const [newUserPassword, setNewUserPassword] = useState("");
-  const [newUserRole, setNewUserRole] = useState("user");
+  const [newUserRole, setNewUserRole] = useState("USER");
   const [showAddForm, setShowAddForm] = useState(false);
+
+  // Security Gate States
+  const [isUnlocked, setIsUnlocked] = useState(false);
+  const [passcodeInput, setPasscodeInput] = useState("");
+  const [secretKeyInput, setSecretKeyInput] = useState("");
+  const [revealedKey, setRevealedKey] = useState<string | null>(null);
 
   // Check auth & fetch user list
   useEffect(() => {
@@ -43,8 +49,8 @@ export default function AdminPanel() {
         const meRes = await fetch("/api/auth/me");
         const meResult = await meRes.json();
         
-        if (!meResult.success || (meResult.data.role !== "admin" && meResult.data.role !== "sub_admin")) {
-          toast.error("Forbidden: Administrative credentials required.");
+        if (!meResult.success || (meResult.data.role !== "ADMIN" && meResult.data.role !== "SUBADMIN")) {
+          toast.error("Insufficient security clearance.");
           router.push("/dashboard");
           return;
         }
@@ -71,8 +77,8 @@ export default function AdminPanel() {
   }, [router]);
 
   const handleRoleChange = async (userId: string, targetRole: string) => {
-    if (currentUser?.role === "sub_admin") {
-      toast.error("Access Denied: Sub-Admins cannot edit user accounts.");
+    if (currentUser?.role === "SUBADMIN") {
+      toast.error("Sub-Admins cannot elevate or modify access roles.");
       return;
     }
 
@@ -100,8 +106,8 @@ export default function AdminPanel() {
   };
 
   const handlePromotionAction = async (userId: string, action: "approve" | "reject", promotionRole: string | null) => {
-    if (currentUser?.role === "sub_admin") {
-      toast.error("Access Denied: Sub-Admins cannot approve/reject promotions.");
+    if (currentUser?.role === "SUBADMIN") {
+      toast.error("Sub-Admins cannot manage role promotions.");
       return;
     }
 
@@ -142,8 +148,8 @@ export default function AdminPanel() {
   };
 
   const handleDeleteUser = async (userId: string) => {
-    if (currentUser?.role === "sub_admin") {
-      toast.error("Access Denied: Sub-Admins cannot delete user accounts.");
+    if (currentUser?.role === "SUBADMIN") {
+      toast.error("Sub-Admins cannot delete users.");
       return;
     }
 
@@ -170,7 +176,7 @@ export default function AdminPanel() {
 
   const handleCreateUser = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (currentUser?.role === "sub_admin") {
+    if (currentUser?.role === "SUBADMIN") {
       toast.error("Access Denied: Sub-Admins cannot manually create users.");
       return;
     }
@@ -211,7 +217,94 @@ export default function AdminPanel() {
     );
   }
 
-  const isSubAdmin = currentUser?.role === "sub_admin";
+  // Security Gate UI
+  if (!isUnlocked) {
+    return (
+      <div className="min-h-screen bg-zinc-950 flex items-center justify-center p-4 font-sans">
+        <Card className="w-full max-w-md bg-zinc-900 border-zinc-800">
+          <CardHeader>
+            <div className="flex justify-center mb-4">
+              <div className="p-3 bg-violet-500/10 rounded-full">
+                <ShieldAlert className="size-8 text-violet-500" />
+              </div>
+            </div>
+            <CardTitle className="text-center text-xl text-zinc-100">Restricted Area</CardTitle>
+            <CardDescription className="text-center text-zinc-400">
+              Admin Portal Security Gateway
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            {!revealedKey ? (
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label className="text-zinc-300">Enter Passcode to Reveal Secret Key</Label>
+                  <Input
+                    type="password"
+                    placeholder="Enter passcode..."
+                    value={passcodeInput}
+                    onChange={(e) => setPasscodeInput(e.target.value)}
+                    className="bg-zinc-950 border-zinc-800 text-white"
+                  />
+                </div>
+                <Button 
+                  onClick={() => {
+                    if (passcodeInput === "2006") {
+                      setRevealedKey("abc123");
+                      toast.success("Secret key revealed!");
+                    } else {
+                      toast.error("Invalid Passcode");
+                    }
+                  }}
+                  className="w-full bg-violet-600 hover:bg-violet-500"
+                >
+                  Reveal Key
+                </Button>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                <div className="p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-md text-center">
+                  <p className="text-xs text-emerald-400 mb-1">Your Secret Key:</p>
+                  <p className="text-lg font-mono font-bold text-emerald-300">{revealedKey}</p>
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-zinc-300">Enter Secret Key to Unlock</Label>
+                  <Input
+                    type="password"
+                    placeholder="Enter secret key..."
+                    value={secretKeyInput}
+                    onChange={(e) => setSecretKeyInput(e.target.value)}
+                    className="bg-zinc-950 border-zinc-800 text-white"
+                  />
+                </div>
+                <Button 
+                  onClick={() => {
+                    if (secretKeyInput === "abc123") {
+                      setIsUnlocked(true);
+                      toast.success("Admin portal unlocked");
+                    } else {
+                      toast.error("Invalid Secret Key");
+                    }
+                  }}
+                  className="w-full bg-violet-600 hover:bg-violet-500"
+                >
+                  <KeyRound className="size-4 mr-2" />
+                  Unlock Console
+                </Button>
+              </div>
+            )}
+            <Link href="/dashboard" className="block text-center mt-4">
+              <Button variant="link" className="text-zinc-500 text-xs hover:text-zinc-300">
+                <ArrowLeft className="size-3 mr-1" />
+                Return to Dashboard
+              </Button>
+            </Link>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  const isSubAdmin = currentUser?.role === "SUBADMIN";
 
   return (
     <div className="min-h-screen bg-zinc-950 text-zinc-150 p-6 md:p-12 font-sans selection:bg-violet-600/30">
@@ -315,9 +408,9 @@ export default function AdminPanel() {
                       onChange={(e) => setNewUserRole(e.target.value)}
                       className="w-full bg-zinc-900 border border-zinc-800 rounded-lg py-1.5 px-3 text-xs text-zinc-200 focus:outline-none focus:ring-1 focus:ring-violet-500"
                     >
-                      <option value="user">User (Standard Candidate)</option>
-                      <option value="sub_admin">Sub-Admin (Read-Only Console)</option>
-                      <option value="admin">Admin (Full Control)</option>
+                      <option value="USER">User (Standard Candidate)</option>
+                      <option value="SUBADMIN">Sub-Admin (Read-Only Console)</option>
+                      <option value="ADMIN">Admin (Full Control)</option>
                     </select>
                   </div>
                 </div>
@@ -388,15 +481,15 @@ export default function AdminPanel() {
                         <td className="py-4 px-4">
                           <Badge 
                             variant="outline" 
-                            className={`text-[9px] uppercase tracking-wider font-semibold py-0.5 px-2 ${
-                              u.role === "admin" 
-                                ? "bg-violet-950/20 text-violet-400 border-violet-800/30" 
-                                : u.role === "sub_admin"
-                                ? "bg-amber-950/20 text-amber-400 border-amber-800/30"
-                                : "bg-zinc-900/40 text-zinc-400 border-zinc-800/50"
-                            }`}
+                            className={
+                              u.role === "ADMIN" 
+                                ? "border-violet-500/30 text-violet-400 bg-violet-500/10" 
+                                : u.role === "SUBADMIN"
+                                ? "border-blue-500/30 text-blue-400 bg-blue-500/10"
+                                : "border-zinc-700 text-zinc-400"
+                            }
                           >
-                            {u.role === "sub_admin" ? "Sub-Admin" : u.role}
+                            {u.role === "SUBADMIN" ? "Sub-Admin" : u.role}
                           </Badge>
                         </td>
 
@@ -404,9 +497,9 @@ export default function AdminPanel() {
                         <td className="py-4 px-4">
                           {u.promotionRequested ? (
                             <div className="flex flex-col gap-1 max-w-[200px]">
-                              <p className="text-[10px] text-amber-400 font-medium">
-                                Requests <Badge variant="outline" className="text-[8px] bg-amber-500/10 border-amber-500/20 py-0 text-amber-300 font-semibold">{u.promotionRole === "sub_admin" ? "Sub-Admin" : u.promotionRole}</Badge>
-                              </p>
+                              <div className="flex items-center gap-2">
+                                Requests <Badge variant="outline" className="text-[8px] bg-amber-500/10 border-amber-500/20 py-0 text-amber-300 font-semibold">{u.promotionRole === "SUBADMIN" ? "Sub-Admin" : u.promotionRole}</Badge>
+                              </div>
                               {!isSubAdmin && (
                                 <div className="flex gap-1.5 mt-1">
                                   <Button
@@ -444,9 +537,9 @@ export default function AdminPanel() {
                                 disabled={actionLoading === u.id}
                                 className="bg-zinc-900 border border-zinc-800 rounded-md py-1 px-2 text-[10px] text-zinc-300 focus:outline-none"
                               >
-                                <option value="user">User</option>
-                                <option value="sub_admin">Sub-Admin</option>
-                                <option value="admin">Admin</option>
+                                <option value="USER">User</option>
+                                <option value="SUBADMIN">Sub-Admin</option>
+                                <option value="ADMIN">Admin</option>
                               </select>
                             )}
 

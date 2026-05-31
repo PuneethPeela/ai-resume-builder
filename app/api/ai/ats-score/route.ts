@@ -7,7 +7,7 @@ import { checkRateLimit } from "@/lib/rate-limit";
 import type { ATSScoreResponse, ApiResponse } from "@/types/api";
 
 const requestSchema = z.object({
-  resumeData: z.object({
+  resumeJson: z.object({
     personalInfo: z.any().optional(),
     summary: z.string().optional(),
     experience: z.array(z.any()).optional(),
@@ -15,7 +15,8 @@ const requestSchema = z.object({
     skills: z.array(z.string()).optional(),
     projects: z.array(z.any()).optional(),
     certifications: z.array(z.any()).optional(),
-  }),
+  }).optional(),
+  resumeData: z.any().optional(), // Fallback for backward compatibility
   jobDescription: z.string(),
 });
 
@@ -50,13 +51,14 @@ export async function POST(req: NextRequest) {
       return NextResponse.json(apiResponse);
     }
 
-    const { resumeData, jobDescription } = parsed.data;
+    const { resumeJson, resumeData, jobDescription } = parsed.data;
+    const finalResume = resumeJson || resumeData;
 
     const prompt = `You are a state-of-the-art Applicant Tracking System (ATS) and Technical Recruiter.
-Analyze the candidate's resume and check it against the target job description to compute a professional ATS matching score.
+Analyze the candidate's resume and check it against the target job description to compute a professional ATS matching score, identify missing keywords, and suggest tailored adjustments to ensure the resume passes ATS.
 
 Resume Data:
-${JSON.stringify(resumeData, null, 2)}
+${JSON.stringify(finalResume, null, 2)}
 
 Target Job Description:
 "${jobDescription}"

@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
             email: normalizedEmail,
             name: name || normalizedEmail.split("@")[0],
             password: password || "google123",
-            role: "user",
+            role: "USER",
           }
         });
       }

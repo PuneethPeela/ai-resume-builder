@@ -9,7 +9,7 @@ async function verifyAdminOrSubAdmin() {
     where: { clerkId: clerkUserId },
   });
 
-  if (!caller || (caller.role !== "admin" && caller.role !== "sub_admin")) {
+  if (!caller || (caller.role !== "ADMIN" && caller.role !== "SUBADMIN")) {
     return null;
   }
   return caller;
@@ -60,7 +60,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ success: false, error: "Access Denied" }, { status: 403 });
     }
 
-    if (caller.role === "sub_admin") {
+    if (caller.role === "SUBADMIN") {
       return NextResponse.json({ success: false, error: "Access Denied: Sub-Admins cannot create users" }, { status: 403 });
     }
 
@@ -86,7 +86,7 @@ export async function POST(req: NextRequest) {
         email: email.toLowerCase().trim(),
         name,
         password: password || "user123",
-        role: role || "user",
+        role: role || "USER",
       }
     });
 
@@ -98,18 +98,18 @@ export async function POST(req: NextRequest) {
 }
 
 /**
- * PUT /api/admin/users
+ * PATCH /api/admin/users
  * Allows updating a user's role or approving/rejecting promotions.
  * Sub-Admin BLOCKED.
  */
-export async function PUT(req: NextRequest) {
+export async function PATCH(req: NextRequest) {
   try {
     const caller = await verifyAdminOrSubAdmin();
     if (!caller) {
       return NextResponse.json({ success: false, error: "Access Denied" }, { status: 403 });
     }
 
-    if (caller.role === "sub_admin") {
+    if (caller.role === "SUBADMIN") {
       return NextResponse.json({ success: false, error: "Access Denied: Sub-Admins cannot modify users" }, { status: 403 });
     }
 
@@ -125,7 +125,7 @@ export async function PUT(req: NextRequest) {
       updatedUser = await prisma.user.update({
         where: { id: userId },
         data: {
-          role: promotionRole || "sub_admin",
+          role: promotionRole || "SUBADMIN",
           promotionRequested: false,
           promotionRole: null,
         }
@@ -148,7 +148,7 @@ export async function PUT(req: NextRequest) {
 
     return NextResponse.json({ success: true, data: updatedUser });
   } catch (error: any) {
-    console.error("PUT Admin Users error:", error);
+    console.error("PATCH Admin Users error:", error);
     return NextResponse.json({ success: false, error: "Failed to modify user" }, { status: 500 });
   }
 }
@@ -165,7 +165,7 @@ export async function DELETE(req: NextRequest) {
       return NextResponse.json({ success: false, error: "Access Denied" }, { status: 403 });
     }
 
-    if (caller.role === "sub_admin") {
+    if (caller.role === "SUBADMIN") {
       return NextResponse.json({ success: false, error: "Access Denied: Sub-Admins cannot delete users" }, { status: 403 });
     }
 

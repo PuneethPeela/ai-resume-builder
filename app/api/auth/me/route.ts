@@ -24,7 +24,7 @@ export async function GET() {
           name: clerkUserId.startsWith("mock_") 
             ? clerkUserId.replace("mock_", "").split("_")[0] 
             : "Reviewer Candidate",
-          role: clerkUserId.includes("admin") ? "admin" : "user",
+          role: clerkUserId.includes("admin") ? "ADMIN" : "USER",
         },
       });
     }

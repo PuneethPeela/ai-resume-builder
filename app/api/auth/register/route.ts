@@ -50,7 +50,7 @@ export async function POST(req: NextRequest) {
         email: normalizedEmail,
         name,
         password,
-        role: role || "user", // support promoting during signup for tester convenience
+        role: role ? (role.toUpperCase() as "USER" | "ADMIN" | "SUBADMIN") : "USER", // support promoting during signup for tester convenience
       },
     });
 

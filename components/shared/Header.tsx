@@ -78,24 +78,18 @@ export function Header() {
 
   const handleLogout = async () => {
     try {
-      const res = await fetch("/api/auth/logout", { method: "POST" });
-      const result = await res.json();
+      await fetch("/api/auth/logout", { method: "POST" });
+      toast.success("Successfully logged out!");
       
       try {
-        await signOut();
+        // Let Clerk handle the redirect natively to prevent race conditions
+        signOut({ redirectUrl: "/sign-in" });
       } catch (e) {
-        console.warn("Clerk sign out error (expected if bypassed):", e);
-      }
-
-      if (result.success || true) {
-        toast.success("Successfully logged out!");
-        router.push("/sign-in");
-        router.refresh();
-      } else {
-        toast.error("Logout failed");
+        window.location.href = "/sign-in";
       }
     } catch (err) {
       toast.error("Network error during logout");
+      window.location.href = "/sign-in";
     }
   };
 
@@ -183,6 +177,30 @@ export function Header() {
               </DropdownMenuItem>
               
               <DropdownMenuItem 
+                onClick={() => router.push("/dashboard/builder-redirect")} 
+                className="flex items-center gap-2 hover:bg-zinc-900 text-xs py-2 rounded-lg cursor-pointer px-2.5"
+              >
+                <LayoutDashboard className="size-3.5 text-zinc-400" />
+                <span>Application</span>
+              </DropdownMenuItem>
+
+              <DropdownMenuItem 
+                onClick={() => router.push("/dashboard/resources")} 
+                className="flex items-center gap-2 hover:bg-zinc-900 text-xs py-2 rounded-lg cursor-pointer px-2.5"
+              >
+                <GraduationCap className="size-3.5 text-zinc-400" />
+                <span>Resources</span>
+              </DropdownMenuItem>
+
+              <DropdownMenuItem 
+                onClick={() => router.push("/community")} 
+                className="flex items-center gap-2 hover:bg-zinc-900 text-xs py-2 rounded-lg cursor-pointer px-2.5"
+              >
+                <Github className="size-3.5 text-zinc-400" />
+                <span>Community</span>
+              </DropdownMenuItem>
+              
+              <DropdownMenuItem 
                 onClick={() => router.push("/dashboard/assistant")} 
                 className="flex items-center gap-2 hover:bg-zinc-900 text-xs py-2 rounded-lg cursor-pointer px-2.5"
               >
@@ -196,6 +214,14 @@ export function Header() {
               >
                 <User className="size-3.5 text-zinc-400" />
                 <span>Profile</span>
+              </DropdownMenuItem>
+
+              <DropdownMenuItem 
+                onClick={() => setShowSettingsModal(true)} 
+                className="flex items-center gap-2 hover:bg-zinc-900 text-xs py-2 rounded-lg cursor-pointer px-2.5"
+              >
+                <Settings className="size-3.5 text-zinc-400" />
+                <span>Settings</span>
               </DropdownMenuItem>
               
               <DropdownMenuItem 

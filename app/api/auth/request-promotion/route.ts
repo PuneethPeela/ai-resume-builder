@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
       const updated = await prisma.user.update({
         where: { id: user.id },
         data: {
-          role: "user",
+          role: "USER",
           promotionRequested: false,
           promotionRole: null,
         }

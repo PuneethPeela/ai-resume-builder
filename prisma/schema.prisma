@@ -10,16 +10,22 @@ datasource db {
   provider = "postgresql"
 }
 
+enum Role {
+  USER
+  SUBADMIN
+  ADMIN
+}
+
 model User {
   id                 String        @id @default(cuid())
   clerkId            String        @unique
   email              String        @unique
   name               String?
   imageUrl           String?
-  role               String        @default("user") // "user" | "admin" | "sub_admin"
+  role               Role          @default(USER)
   password           String?       // encrypted password for local auth
   promotionRequested Boolean       @default(false)
-  promotionRole      String?       // "admin" | "sub_admin"
+  promotionRole      Role?
   resumes            Resume[]
   chats              ChatMessage[]
   createdAt          DateTime      @default(now())

@@ -146,8 +146,8 @@ export async function POST(req: NextRequest) {
 
     // Prepare system instructions and message thread for Gemini
     const systemPrompt = `You are "ResumAI Assistant", an elite AI career coach and multilingual resume specialist.
-You are fluent in English, Telugu, Hindi, French, Japanese, and other major languages.
-You will converse with the user in the language they write in (e.g. if they write in Telugu, reply in Telugu; if they write in Hindi, reply in Hindi).
+You MUST natively support English, Telugu, Hindi, French, Japanese, and other major languages.
+You will converse with the user in the language they write in (e.g. if they write in Telugu, reply in Telugu; if they write in Hindi, reply in Hindi; if they write in French, reply in French; if they write in Japanese, reply in Japanese).
 
 Current Candidate Resume Data:
 ${resumeContext ? JSON.stringify(resumeContext, null, 2) : "No resume data entered yet."}

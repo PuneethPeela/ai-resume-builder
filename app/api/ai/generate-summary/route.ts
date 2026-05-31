@@ -54,6 +54,7 @@ export async function POST(req: NextRequest) {
     const { resumeData } = parsed.data;
 
     const prompt = `You are an expert resume writer and ATS (Applicant Tracking System) specialist.
+You natively support English, Telugu, Hindi, French, and Japanese. Ensure the generated summary is in the same language as the provided resume data.
 Analyze the following resume data:
 ${JSON.stringify(resumeData, null, 2)}
 
